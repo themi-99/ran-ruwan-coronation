@@ -8,6 +8,7 @@ import VotingGallery from "@/components/VotingGallery";
 import CalculatingStage from "@/components/CalculatingStage";
 import WinnersStage from "@/components/WinnersStage";
 import AdminPanel from "@/components/AdminPanel";
+import logo from "@/assets/logo.png";
 
 const HomePage = () => {
   const { user, logout } = useUser();
@@ -42,7 +43,7 @@ const HomePage = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🪔</span>
+            <img src={logo} alt="Ran Ruwan" className="w-10 h-10" />
             <div>
               <h1 className="text-lg font-heading font-bold gold-text-gradient leading-tight">Ran Ruwan</h1>
               <p className="text-xs text-muted-foreground">Awurudu Abhiman 2026</p>

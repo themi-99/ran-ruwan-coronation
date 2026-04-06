@@ -5,6 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import heroBanner from "@/assets/hero-banner.jpg";
+import logo from "@/assets/logo.png";
 
 const LoginPage = () => {
   const [nic, setNic] = useState("");
@@ -42,9 +43,7 @@ const LoginPage = () => {
       <div className="relative z-10 w-full max-w-md space-y-8 animate-fade-in">
         {/* Logo area */}
         <div className="text-center space-y-3">
-          <div className="inline-block p-4 rounded-full gold-gradient gold-glow">
-            <span className="text-4xl">🪔</span>
-          </div>
+          <img src={logo} alt="Ran Ruwan Gold Loan" className="w-28 h-28 mx-auto drop-shadow-lg" />
           <h1 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient">
             Ran Ruwan
           </h1>
