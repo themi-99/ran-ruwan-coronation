@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import avuruduFamily from "@/assets/avurudu-family.jpg";
 
 interface Winner {
   nic: string;
@@ -13,15 +14,12 @@ const WinnersStage = () => {
   const [kumariya, setKumariya] = useState<Winner | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchWinners();
-  }, []);
+  useEffect(() => { fetchWinners(); }, []);
 
   const fetchWinners = async () => {
     const { data: votes } = await supabase.from("votes").select("*");
     const { data: contestants } = await supabase.from("contestants").select("*");
     const { data: profiles } = await supabase.from("profiles").select("nic, full_name, gender");
-
     if (!votes || !contestants || !profiles) { setLoading(false); return; }
 
     const getWinner = (category: string): Winner | null => {
@@ -43,13 +41,23 @@ const WinnersStage = () => {
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading winners...</div>;
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="text-center space-y-3">
+    <div className="space-y-8 animate-fade-in relative">
+      {/* Festive background image */}
+      <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-64 h-40 opacity-15 pointer-events-none">
+        <img src={avuruduFamily} alt="" className="w-full h-full object-contain" />
+      </div>
+
+      <div className="text-center space-y-3 relative">
         <div className="text-5xl" style={{ animation: "crown-entrance 1s ease-out forwards" }}>👑</div>
         <h2 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient">
           The Royal Court of Avurudu 2026
         </h2>
         <p className="text-muted-foreground">The votes are in. Behold your champions!</p>
+        <div className="flex justify-center gap-2">
+          {["🎆", "🎇", "✨", "🎇", "🎆"].map((e, i) => (
+            <span key={i} className="text-xl" style={{ animation: `float ${2 + i * 0.3}s ease-in-out infinite` }}>{e}</span>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -61,7 +69,8 @@ const WinnersStage = () => {
 };
 
 const WinnerCard = ({ title, winner, emoji }: { title: string; winner: Winner | null; emoji: string }) => (
-  <div className="bg-card rounded-lg overflow-hidden gold-border card-glow text-center">
+  <div className="bg-card/80 backdrop-blur-sm rounded-lg overflow-hidden gold-border card-glow text-center relative">
+    <div className="absolute inset-0 shimmer pointer-events-none" />
     {winner ? (
       <>
         {winner.photo_urls?.[0] && (
@@ -69,7 +78,7 @@ const WinnerCard = ({ title, winner, emoji }: { title: string; winner: Winner | 
             <img src={winner.photo_urls[0]} alt={winner.full_name} className="w-full h-full object-cover" />
           </div>
         )}
-        <div className="p-6 space-y-3">
+        <div className="p-6 space-y-3 relative">
           <div className="text-4xl">{emoji}</div>
           <h3 className="text-xl font-heading font-bold text-gold">{title}</h3>
           <p className="text-2xl font-heading font-bold text-foreground">{winner.full_name}</p>
