@@ -52,9 +52,17 @@ const AdminPanel = ({ currentStage, onStageChange }: Props) => {
 
   const switchStage = async (stage: string) => {
     setSwitching(true);
-    const { error } = await supabase.from("app_config").update({ current_stage: stage }).eq("id", 1);
-    if (error) toast.error("Failed to switch stage");
-    else { onStageChange(stage); toast.success(`Switched to ${stage}`); }
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-update-stage", {
+        body: { admin_nic: adminNic, stage },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      onStageChange(stage);
+      toast.success(`Switched to ${stage}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to switch stage");
+    }
     setSwitching(false);
   };
 
