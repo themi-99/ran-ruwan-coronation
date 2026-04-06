@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import ContestantModal from "@/components/ContestantModal";
 
 interface Contestant {
   id: string;
@@ -183,63 +182,6 @@ const ThumbnailCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote
         </div>
       </div>
     </div>
-  );
-};
-
-/* ── Detail Modal ── */
-const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, onClose }: {
-  contestant: Contestant; category: "kumara" | "kumariya";
-  isVoted: boolean; hasVoted: boolean; isSelf: boolean;
-  onVote: (nic: string, cat: "kumara" | "kumariya") => void;
-  onClose: () => void;
-}) => {
-  const [photoIdx, setPhotoIdx] = useState(0);
-  const photos = contestant.photo_urls || [];
-
-  return (
-    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="max-w-md p-0 bg-card border-gold/30 gap-0 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="sr-only">
-          <DialogTitle>{contestant.full_name}</DialogTitle>
-        </DialogHeader>
-
-        {/* Carousel */}
-        {photos.length > 0 && (
-          <div className="relative aspect-[3/4] overflow-hidden bg-gold-dark/30">
-            <img src={photos[photoIdx]} alt={contestant.full_name}
-              className="w-full h-full object-contain" />
-            {photos.length > 1 && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/50 backdrop-blur-sm rounded-full px-3 py-1.5">
-                {photos.map((_, i) => (
-                  <button key={i} onClick={() => setPhotoIdx(i)}
-                    className={`w-3 h-3 rounded-full transition-colors ${i === photoIdx ? "bg-gold" : "bg-foreground/40"}`} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Info */}
-        <div className="p-5 space-y-4">
-          <h3 className="font-heading font-bold text-xl text-foreground">{contestant.full_name}</h3>
-          {contestant.about_me && (
-            <p className="text-sm text-muted-foreground about-me-text leading-relaxed">{contestant.about_me}</p>
-          )}
-
-          {isSelf ? (
-            <p className="text-sm text-muted-foreground italic text-center">You can't vote for yourself</p>
-          ) : isVoted ? (
-            <div className="text-center py-2 text-gold font-heading font-semibold">✅ You voted for {contestant.full_name}</div>
-          ) : (
-            <Button onClick={() => onVote(contestant.nic, category)} disabled={hasVoted}
-              className="w-full gold-gradient text-primary-foreground hover:opacity-90 h-11 text-base font-heading font-semibold"
-              size="lg">
-              {hasVoted ? "Already Voted" : `Vote for ${contestant.full_name} 🗳️`}
-            </Button>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 };
 
