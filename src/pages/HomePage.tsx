@@ -45,8 +45,8 @@ const HomePage = () => {
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Festive background layer */}
       <div className="fixed inset-0 pointer-events-none">
-        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-8" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background/95" />
       </div>
 
       {/* Floating decorative sun */}
