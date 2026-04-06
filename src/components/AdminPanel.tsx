@@ -6,6 +6,7 @@ import { toast } from "sonner";
 interface Props {
   currentStage: string;
   onStageChange: (stage: string) => void;
+  adminNic: string;
 }
 
 interface LeaderEntry {
@@ -21,7 +22,7 @@ const STAGES = [
   { key: "winners", label: "Winners", emoji: "👑" },
 ];
 
-const AdminPanel = ({ currentStage, onStageChange }: Props) => {
+const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   const [kumaraBoard, setKumaraBoard] = useState<LeaderEntry[]>([]);
   const [kumariyaBoard, setKumariyaBoard] = useState<LeaderEntry[]>([]);
   const [switching, setSwitching] = useState(false);
@@ -52,9 +53,17 @@ const AdminPanel = ({ currentStage, onStageChange }: Props) => {
 
   const switchStage = async (stage: string) => {
     setSwitching(true);
-    const { error } = await supabase.from("app_config").update({ current_stage: stage }).eq("id", 1);
-    if (error) toast.error("Failed to switch stage");
-    else { onStageChange(stage); toast.success(`Switched to ${stage}`); }
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-update-stage", {
+        body: { admin_nic: adminNic, stage },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      onStageChange(stage);
+      toast.success(`Switched to ${stage}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to switch stage");
+    }
     setSwitching(false);
   };
 
