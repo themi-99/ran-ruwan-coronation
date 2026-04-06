@@ -91,7 +91,7 @@ const LoginPage = () => {
           <Input
             placeholder="Enter your NIC number"
             value={nic}
-            onChange={(e) => { setNic(e.target.value); setError(""); }}
+            onChange={(e) => { setNic(e.target.value.toUpperCase()); setError(""); }}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             className="bg-input border-border text-foreground placeholder:text-muted-foreground"
           />
