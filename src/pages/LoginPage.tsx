@@ -49,9 +49,9 @@ const LoginPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4 relative overflow-hidden">
       {/* Layered festive backgrounds */}
       <div className="absolute inset-0">
-        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-15" />
+        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-30" />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background/95" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/85" />
 
       {/* Floating sun decoration */}
       <img src={sunFace} alt="" className="absolute top-4 right-4 w-24 h-24 md:w-32 md:h-32 opacity-30"
