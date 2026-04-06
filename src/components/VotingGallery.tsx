@@ -131,9 +131,9 @@ const ContestantCard = ({ contestant, category, isVoted, hasVoted, onVote, isSel
         </div>
       )}
       <div className="p-4 space-y-2">
-        <h4 className="font-heading font-semibold text-foreground">{contestant.full_name}</h4>
+        <h4 className="font-heading font-bold text-lg text-foreground">{contestant.full_name}</h4>
         {contestant.about_me && (
-          <p className="text-sm text-muted-foreground line-clamp-3">{contestant.about_me}</p>
+          <p className="text-sm text-muted-foreground line-clamp-3 about-me-text">{contestant.about_me}</p>
         )}
         {isSelf ? (
           <p className="text-xs text-muted-foreground italic">You can't vote for yourself</p>
