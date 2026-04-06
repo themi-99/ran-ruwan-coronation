@@ -118,13 +118,13 @@ const ContestantCard = ({ contestant, category, isVoted, hasVoted, onVote, isSel
   return (
     <div className={`bg-card rounded-lg overflow-hidden gold-border card-glow transition-all ${isVoted ? "ring-2 ring-gold" : ""}`}>
       {photos.length > 0 && (
-        <div className="relative aspect-[4/3] overflow-hidden">
-          <img src={photos[photoIdx]} alt={contestant.full_name} className="w-full h-full object-cover" loading="lazy" />
+        <div className="relative aspect-[3/4] overflow-hidden bg-gold-dark/30">
+          <img src={photos[photoIdx]} alt={contestant.full_name} className="w-full h-full object-contain" loading="lazy" />
           {photos.length > 1 && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 bg-background/50 backdrop-blur-sm rounded-full px-2 py-1">
               {photos.map((_, i) => (
                 <button key={i} onClick={() => setPhotoIdx(i)}
-                  className={`w-2 h-2 rounded-full transition-colors ${i === photoIdx ? "bg-gold" : "bg-foreground/30"}`} />
+                  className={`w-2.5 h-2.5 rounded-full transition-colors ${i === photoIdx ? "bg-gold" : "bg-foreground/40"}`} />
               ))}
             </div>
           )}
