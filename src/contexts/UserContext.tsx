@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface UserProfile {
   nic: string;
@@ -28,7 +29,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     else localStorage.removeItem("rr_user");
   };
 
-  const logout = () => handleSetUser(null);
+  const logout = () => {
+    supabase.auth.signOut();
+    handleSetUser(null);
+  };
 
   return (
     <UserContext.Provider value={{ user, setUser: handleSetUser, logout }}>

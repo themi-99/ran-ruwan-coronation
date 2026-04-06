@@ -22,6 +22,7 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
 
+    // First verify the NIC exists in profiles
     const { data, error: dbError } = await supabase
       .from("profiles")
       .select("*")
@@ -30,6 +31,16 @@ const LoginPage = () => {
 
     if (dbError) { setError("Something went wrong. Please try again."); setLoading(false); return; }
     if (!data) { setError("NIC not found in our employee database."); setLoading(false); return; }
+
+    // Sign in anonymously to get a real Supabase session
+    const { error: anonError } = await supabase.auth.signInAnonymously();
+    if (anonError) { setError("Authentication failed. Please try again."); setLoading(false); return; }
+
+    // Tag the anonymous user with the verified NIC
+    const { error: metaError } = await supabase.auth.updateUser({
+      data: { custom_nic: data.nic },
+    });
+    if (metaError) { setError("Failed to set user identity. Please try again."); setLoading(false); return; }
 
     setUser(data);
     navigate("/home");
