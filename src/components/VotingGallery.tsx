@@ -198,7 +198,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="max-w-md p-0 overflow-hidden bg-card border-gold/30 gap-0">
+      <DialogContent className="max-w-md p-0 bg-card border-gold/30 gap-0 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="sr-only">
           <DialogTitle>{contestant.full_name}</DialogTitle>
         </DialogHeader>
