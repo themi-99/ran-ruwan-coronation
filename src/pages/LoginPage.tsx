@@ -5,9 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Fireworks from "@/components/Fireworks";
-import heroBanner from "@/assets/hero-banner.jpg";
-import festiveScene from "@/assets/festive-scene.jpg";
-import sunFace from "@/assets/sun-face.jpg";
+import awuruduBg from "@/assets/awurudu-bg.jpg";
 import logo from "@/assets/logo.png";
 
 const LoginPage = () => {
@@ -22,11 +20,9 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
 
-    // Sign in anonymously to get a real Supabase session
     const { error: anonError } = await supabase.auth.signInAnonymously();
     if (anonError) { setError("Authentication failed. Please try again."); setLoading(false); return; }
 
-    // Call edge function to verify NIC and set secure app_metadata
     const { data, error: verifyError } = await supabase.functions.invoke("verify-nic", {
       body: { nic: nic.trim() },
     });
@@ -38,27 +34,17 @@ const LoginPage = () => {
       return;
     }
 
-    // Refresh the session to get updated JWT with app_metadata
     await supabase.auth.refreshSession();
-
     setUser(data.profile);
     navigate("/home");
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4 relative overflow-hidden">
-      {/* Layered festive backgrounds */}
-      <div className="absolute inset-0">
-        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-30" />
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Custom Awurudu background */}
+      <div className="fixed inset-0">
+        <img src={awuruduBg} alt="" className="w-full h-full object-cover" width={1920} height={1920} />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/85" />
-
-      {/* Floating sun decoration */}
-      <img src={sunFace} alt="" className="absolute top-4 right-4 w-24 h-24 md:w-32 md:h-32 opacity-30"
-        style={{ animation: "float 4s ease-in-out infinite" }} />
-
-      {/* Oil lamp border top */}
-      <div className="absolute top-0 left-0 right-0 h-2 gold-gradient" />
 
       <Fireworks />
 
@@ -67,13 +53,13 @@ const LoginPage = () => {
         <div className="text-center space-y-3">
           <img src={logo} alt="Ran Ruwan Gold Loan" className="w-32 h-32 mx-auto drop-shadow-lg"
             style={{ animation: "float 3s ease-in-out infinite" }} />
-          <h1 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient">
+          <h1 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient drop-shadow-md">
             Ran Ruwan
           </h1>
-          <h2 className="text-xl font-heading text-gold-light">
+          <h2 className="text-xl font-heading text-gold-dark font-semibold">
             Awurudu Abhiman 2026
           </h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm font-medium">
             Ran Ruwan Gold Loans Pvt Ltd
           </p>
           <div className="flex justify-center gap-2 text-xl">
@@ -84,7 +70,7 @@ const LoginPage = () => {
         </div>
 
         {/* Login card */}
-        <div className="bg-card/80 backdrop-blur-md rounded-lg p-6 gold-border card-glow space-y-4">
+        <div className="bg-card/85 backdrop-blur-md rounded-lg p-6 gold-border card-glow space-y-4">
           <label className="block text-sm font-medium text-foreground">
             National Identity Card (NIC)
           </label>
@@ -108,7 +94,7 @@ const LoginPage = () => {
           </Button>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground">සුභ අලුත් අවුරුද්දක් වේවා! 🎊</p>
+        <p className="text-center text-xs text-muted-foreground font-medium">සුභ අලුත් අවුරුද්දක් වේවා! 🎊</p>
       </div>
     </div>
   );
