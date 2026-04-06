@@ -90,7 +90,7 @@ const HomePage = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
         {showAdmin && user.is_admin ? (
-          <AdminPanel currentStage={stage} onStageChange={(s) => setStage(s)} />
+          <AdminPanel currentStage={stage} onStageChange={(s) => setStage(s)} adminNic={user.nic} />
         ) : (
           <div className="animate-fade-in">
             {stage === "competing" && (

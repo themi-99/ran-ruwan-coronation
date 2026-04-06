@@ -6,6 +6,7 @@ import { toast } from "sonner";
 interface Props {
   currentStage: string;
   onStageChange: (stage: string) => void;
+  adminNic: string;
 }
 
 interface LeaderEntry {
@@ -21,7 +22,7 @@ const STAGES = [
   { key: "winners", label: "Winners", emoji: "👑" },
 ];
 
-const AdminPanel = ({ currentStage, onStageChange }: Props) => {
+const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   const [kumaraBoard, setKumaraBoard] = useState<LeaderEntry[]>([]);
   const [kumariyaBoard, setKumariyaBoard] = useState<LeaderEntry[]>([]);
   const [switching, setSwitching] = useState(false);
