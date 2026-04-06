@@ -11,8 +11,7 @@ import AdminPanel from "@/components/AdminPanel";
 import Fireworks from "@/components/Fireworks";
 import logo from "@/assets/logo.png";
 import avuruduBanner from "@/assets/avurudu-banner.jpg";
-import festiveScene from "@/assets/festive-scene.jpg";
-import sunOrnate from "@/assets/sun-ornate.jpg";
+import awuruduBg from "@/assets/awurudu-bg.jpg";
 
 const HomePage = () => {
   const { user, logout } = useUser();
@@ -41,17 +40,15 @@ const HomePage = () => {
 
   if (!user) return null;
 
-  return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Festive background layer */}
-      <div className="fixed inset-0 pointer-events-none">
-        <img src={festiveScene} alt="" className="w-full h-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background/95" />
-      </div>
+  const isAdmin = showAdmin && user.is_admin;
 
-      {/* Floating decorative sun */}
-      <img src={sunOrnate} alt="" className="fixed bottom-10 right-5 w-20 h-20 opacity-15 pointer-events-none"
-        style={{ animation: "float 5s ease-in-out infinite" }} />
+  return (
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Custom Awurudu background */}
+      <div className="fixed inset-0">
+        <img src={awuruduBg} alt="" className="w-full h-full object-cover" width={1920} height={1920} />
+        {isAdmin && <div className="absolute inset-0 bg-background/60" />}
+      </div>
 
       <Fireworks />
 
@@ -89,7 +86,7 @@ const HomePage = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
-        {showAdmin && user.is_admin ? (
+        {isAdmin ? (
           <AdminPanel currentStage={stage} onStageChange={(s) => setStage(s)} adminNic={user.nic} />
         ) : (
           <div className="animate-fade-in">
