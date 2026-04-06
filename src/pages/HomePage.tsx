@@ -8,6 +8,7 @@ import VotingGallery from "@/components/VotingGallery";
 import CalculatingStage from "@/components/CalculatingStage";
 import WinnersStage from "@/components/WinnersStage";
 import AdminPanel from "@/components/AdminPanel";
+import logo from "@/assets/logo.png";
 
 const HomePage = () => {
   const { user, logout } = useUser();

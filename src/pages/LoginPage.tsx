@@ -5,6 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import heroBanner from "@/assets/hero-banner.jpg";
+import logo from "@/assets/logo.png";
 
 const LoginPage = () => {
   const [nic, setNic] = useState("");
