@@ -35,7 +35,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
         {/* Custom close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-background/40 backdrop-blur-sm border border-gold/20 flex items-center justify-center text-gold hover:bg-background/60 hover:scale-110 transition-all"
+          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-background/80 border border-gold/20 flex items-center justify-center text-gold hover:bg-background hover:scale-110 transition-all"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
