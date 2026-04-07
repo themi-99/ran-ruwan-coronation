@@ -69,11 +69,11 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-2xl font-heading font-bold gold-text-gradient">⚙️ Admin Panel</h2>
+      <h2 className="text-2xl md:text-3xl font-heading font-black uppercase gold-text-gradient tracking-wide">⚙️ Admin Panel</h2>
 
       {/* Stage Switcher */}
       <div className="bg-card rounded-lg p-5 gold-border space-y-3">
-        <h3 className="font-heading font-semibold text-foreground">Stage Control</h3>
+        <h3 className="font-heading font-bold text-lg text-foreground tracking-wide">Stage Control</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {STAGES.map((s) => (
             <Button key={s.key} onClick={() => switchStage(s.key)} disabled={switching || currentStage === s.key}
@@ -85,7 +85,7 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
             </Button>
           ))}
         </div>
-        <p className="text-sm text-muted-foreground">Current: <span className="text-gold font-medium">{currentStage}</span></p>
+        <p className="text-sm text-muted-foreground font-body">Current: <span className="text-gold font-semibold">{currentStage}</span></p>
       </div>
 
       {/* Leaderboards */}
@@ -99,7 +99,7 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
 
 const Leaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[] }) => (
   <div className="bg-card rounded-lg p-5 gold-border space-y-3">
-    <h3 className="font-heading font-semibold text-gold">{title}</h3>
+    <h3 className="font-heading font-bold text-lg text-gold tracking-wide">{title}</h3>
     {entries.length === 0 ? (
       <p className="text-muted-foreground text-sm">No votes yet</p>
     ) : (
@@ -110,7 +110,7 @@ const Leaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[]
               <span className={`text-lg ${i === 0 ? "text-gold" : "text-muted-foreground"}`}>
                 {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`}
               </span>
-              <span className="text-foreground text-sm">{e.full_name}</span>
+              <span className="text-foreground text-sm font-body">{e.full_name}</span>
             </div>
             <span className="text-gold font-semibold">{e.votes}</span>
           </div>

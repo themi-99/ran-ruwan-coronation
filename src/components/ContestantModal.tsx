@@ -110,13 +110,16 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
               </div>
             )}
 
-            <div className="p-6 flex flex-col gap-4 items-center text-center">
-              <h3 className="font-heading font-bold text-3xl md:text-4xl gold-text-gradient tracking-wide leading-tight">
+            <div className="p-6 flex flex-col gap-5 items-center text-center">
+              <h3
+                className="font-heading font-black text-3xl md:text-4xl gold-text-gradient tracking-wide leading-tight uppercase"
+                style={{ filter: "drop-shadow(0 0 15px hsl(43 76% 52% / 0.3))" }}
+              >
                 {contestant.full_name}
               </h3>
 
               {contestant.about_me && (
-                <p className="text-cream/90 font-body text-sm md:text-base leading-relaxed tracking-wide max-w-sm">
+                <p className="text-cream/90 font-body text-sm md:text-base leading-loose tracking-wide max-w-sm">
                   {contestant.about_me}
                 </p>
               )}
