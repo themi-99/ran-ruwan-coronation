@@ -27,7 +27,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="max-w-md rounded-2xl border border-gold/30 bg-background/70 backdrop-blur-xl shadow-[0_0_60px_hsl(43_76%_52%_/_0.15)] p-0 gap-0 max-h-[90vh] overflow-y-auto [&>button]:hidden">
+      <DialogContent className="max-w-md rounded-2xl border border-gold/30 bg-background/95 shadow-[0_0_60px_hsl(43_76%_52%_/_0.15)] p-0 gap-0 max-h-[90vh] overflow-y-auto [&>button]:hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>{contestant.full_name}</DialogTitle>
         </DialogHeader>
@@ -35,7 +35,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
         {/* Custom close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-background/40 backdrop-blur-sm border border-gold/20 flex items-center justify-center text-gold hover:bg-background/60 hover:scale-110 transition-all"
+          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-background/80 border border-gold/20 flex items-center justify-center text-gold hover:bg-background hover:scale-110 transition-all"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -58,7 +58,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
                 className="relative w-full max-h-[45vh] object-contain z-10"
               />
               {photos.length > 1 && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/50 backdrop-blur-sm rounded-full px-3 py-1.5">
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/70 rounded-full px-3 py-1.5 z-20">
                   {photos.map((_, i) => (
                     <button
                       key={i}
