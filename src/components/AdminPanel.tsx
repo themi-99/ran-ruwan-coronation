@@ -54,7 +54,25 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
     setKumariyaBoard(count("kumariya"));
   };
 
-  const switchStage = async (stage: string) => {
+  const fetchParticipantCount = async () => {
+    const { data } = await supabase.from("app_config").select("manual_participant_count").eq("id", 1).maybeSingle();
+    if (data?.manual_participant_count != null) setParticipantCount(data.manual_participant_count);
+  };
+
+  const saveParticipantCount = async () => {
+    setSavingCount(true);
+    try {
+      const { error } = await supabase.functions.invoke("admin-update-stage", {
+        body: { admin_nic: adminNic, participant_count: participantCount },
+      });
+      if (error) throw error;
+      toast.success("Participant count updated!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update count");
+    }
+    setSavingCount(false);
+  };
+
     setSwitching(true);
     try {
       const { data, error } = await supabase.functions.invoke("admin-update-stage", {
