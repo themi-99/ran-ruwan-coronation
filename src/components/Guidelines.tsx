@@ -145,20 +145,27 @@ const Guidelines = () => {
       <div className="h-px w-2/3 mx-auto bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
       {/* Content */}
-      <ul
-        className={`space-y-3 transition-opacity duration-300 ${
-          isIndic ? "leading-loose" : "leading-relaxed"
-        }`}
-      >
-        {content[lang].map((item, i) => (
-          <li key={`${lang}-${i}`} className="flex items-start gap-3">
-            <span className="mt-1 text-gold shrink-0 text-sm">🪷</span>
-            <span className={`font-body text-sm md:text-base text-foreground/85 ${isIndic ? "text-base md:text-lg" : ""}`}>
-              {item}
-            </span>
-          </li>
+      <div className={`space-y-6 transition-opacity duration-300 ${isIndic ? "leading-loose" : "leading-relaxed"}`}>
+        {content[lang].map((section, si) => (
+          <div key={`${lang}-${si}`} className="space-y-3">
+            {section.heading && (
+              <h4 className="text-sm md:text-base font-heading font-semibold text-gold tracking-wide uppercase">
+                {section.heading}
+              </h4>
+            )}
+            <ul className="space-y-2">
+              {section.items.map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-1 text-gold shrink-0 text-sm">🪷</span>
+                  <span className={`font-body text-sm md:text-base text-foreground/85 ${isIndic ? "text-base md:text-lg" : ""}`}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
