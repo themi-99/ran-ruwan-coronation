@@ -1,12 +1,16 @@
-import sunFace from "@/assets/sun-face.jpg";
+import celestialHourglass from "@/assets/celestial-hourglass.png";
 
 const CalculatingStage = () => (
   <div className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-8 animate-fade-in relative">
-    {/* Decorative sun */}
-    <img src={sunFace} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 opacity-20"
-      style={{ animation: "float 4s ease-in-out infinite" }} />
-
-    <div className="text-7xl" style={{ animation: "float 3s ease-in-out infinite" }}>🪔</div>
+    {/* Celestial hourglass */}
+    <img
+      src={celestialHourglass}
+      alt="Celestial vote-counting device"
+      className="w-48 h-auto md:w-64 drop-shadow-[0_0_30px_hsl(43_76%_52%_/_0.4)]"
+      style={{ animation: "float 4s ease-in-out infinite" }}
+      width={768}
+      height={1024}
+    />
 
     <div className="space-y-4">
       <h2
