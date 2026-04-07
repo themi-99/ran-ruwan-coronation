@@ -90,8 +90,8 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
 
       {/* Leaderboards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Leaderboard title="👑 Kumara Leaderboard" entries={kumaraBoard} />
-        <Leaderboard title="👑 Kumariya Leaderboard" entries={kumariyaBoard} />
+        <Leaderboard title="👑 Swarna Kumara Leaderboard" entries={kumaraBoard} />
+        <Leaderboard title="👑 Swarna Kumariya Leaderboard" entries={kumariyaBoard} />
       </div>
     </div>
   );

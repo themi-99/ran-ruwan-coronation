@@ -87,12 +87,12 @@ const VotingGallery = ({ voterNic }: Props) => {
     <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-2">
         <h2 className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient">🗳️ Cast Your Vote 🗳️</h2>
-        <p className="text-muted-foreground font-body">Vote for one Avurudu Kumara and one Avurudu Kumariya</p>
+        <p className="text-muted-foreground font-body">Vote for one Swarna Kumara and one Swarna Kumariya</p>
       </div>
 
       {/* Kumara Section */}
       <section className="space-y-3">
-        <h3 className="text-xl font-heading font-semibold text-gold">👑 Avurudu Kumara</h3>
+        <h3 className="text-xl font-heading font-semibold text-gold">👑 Swarna Kumara</h3>
         {males.length === 0 ? (
           <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
         ) : (
@@ -111,7 +111,7 @@ const VotingGallery = ({ voterNic }: Props) => {
 
       {/* Kumariya Section */}
       <section className="space-y-3">
-        <h3 className="text-xl font-heading font-semibold text-gold">👑 Avurudu Kumariya</h3>
+        <h3 className="text-xl font-heading font-semibold text-gold">👑 Swarna Kumariya</h3>
         {females.length === 0 ? (
           <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
         ) : (
