@@ -121,6 +121,8 @@ const HomePage = () => {
                   ))}
                 </div>
 
+                <Guidelines />
+
                 {hasCompeted ? (
                   <div className="relative bg-card/30 backdrop-blur-xl rounded-2xl p-8 md:p-10 text-center space-y-4 border border-gold/30 overflow-hidden"
                     style={{ boxShadow: "0 0 40px hsl(43 76% 52% / 0.1), inset 0 1px 0 hsl(43 76% 52% / 0.15)" }}
