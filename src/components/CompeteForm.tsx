@@ -65,10 +65,10 @@ const CompeteForm = ({ userNic, onComplete }: Props) => {
 
   return (
     <div className="bg-card rounded-lg p-6 gold-border card-glow space-y-5 animate-fade-in">
-      <h3 className="text-xl font-heading font-bold text-gold">Enter the Competition</h3>
+      <h3 className="text-xl md:text-2xl font-heading font-bold text-gold tracking-wide">Enter the Competition</h3>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">About Me</label>
+        <label className="text-sm font-body font-medium text-foreground tracking-wide">About Me</label>
         <Textarea
           placeholder="Tell us about yourself and why you should be crowned Swarna Kumara / Kumariya!"
           value={aboutMe}
@@ -80,8 +80,8 @@ const CompeteForm = ({ userNic, onComplete }: Props) => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">
-          Photos <span className="text-muted-foreground">(3-5 photos required)</span>
+        <label className="text-sm font-body font-medium text-foreground tracking-wide">
+          Photos <span className="text-muted-foreground font-normal">(3-5 photos required)</span>
         </label>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
           {previews.map((src, i) => (
