@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 interface Props {
@@ -73,6 +74,7 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
     setSavingCount(false);
   };
 
+  const switchStage = async (stage: string) => {
     setSwitching(true);
     try {
       const { data, error } = await supabase.functions.invoke("admin-update-stage", {
@@ -91,6 +93,28 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   return (
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-2xl md:text-3xl font-heading font-black uppercase gold-text-gradient tracking-wide">⚙️ Admin Panel</h2>
+
+      {/* Participant Count */}
+      <div className="bg-card rounded-lg p-5 gold-border space-y-3">
+        <h3 className="font-heading font-bold text-lg text-foreground tracking-wide">📊 Social Proof Counter</h3>
+        <p className="text-xs text-muted-foreground font-body">This number is shown on the homepage as "Over X Contestants Have Already Joined"</p>
+        <div className="flex items-center gap-3">
+          <Input
+            type="number"
+            min={0}
+            value={participantCount}
+            onChange={(e) => setParticipantCount(Number(e.target.value))}
+            className="w-32 bg-input border-border text-foreground text-lg font-heading font-bold"
+          />
+          <Button
+            onClick={saveParticipantCount}
+            disabled={savingCount}
+            className="gold-gradient text-primary-foreground font-semibold hover:opacity-90"
+          >
+            {savingCount ? "Saving..." : "Update Count"}
+          </Button>
+        </div>
+      </div>
 
       {/* Stage Switcher */}
       <div className="bg-card rounded-lg p-5 gold-border space-y-3">
