@@ -178,7 +178,7 @@ const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, o
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent pointer-events-none z-20" style={{ top: "40%" }} />
 
       {/* Content overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-3 z-30 space-y-2">
+      <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 z-30 space-y-2">
         <h4 className="font-heading font-bold text-sm md:text-base text-foreground truncate drop-shadow-lg">
           {contestant.full_name}
         </h4>
