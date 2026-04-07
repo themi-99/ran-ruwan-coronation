@@ -69,9 +69,9 @@ const VotingGallery = ({ voterNic }: Props) => {
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading contestants...</div>;
 
   return (
-    <div className="space-y-10 animate-fade-in">
-      {/* Atmospheric overlay */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 pointer-events-none z-0" />
+    <div className="relative space-y-10 animate-fade-in p-6">
+      {/* Frosted glass wrapper */}
+      <div className="absolute inset-0 -m-6 bg-black/20 backdrop-blur-md rounded-3xl border border-foreground/10 pointer-events-none z-0" />
 
       {/* Cinematic Header */}
       <div className="text-center space-y-3 relative z-10">
