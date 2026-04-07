@@ -10,6 +10,7 @@ import WinnersStage from "@/components/WinnersStage";
 import AdminPanel from "@/components/AdminPanel";
 import Fireworks from "@/components/Fireworks";
 import Guidelines from "@/components/Guidelines";
+import ParticipantCounter from "@/components/ParticipantCounter";
 import logo from "@/assets/logo.png";
 import avuruduBanner from "@/assets/avurudu-banner.jpg";
 import awuruduBg from "@/assets/awurudu-bg.jpg";
@@ -122,6 +123,8 @@ const HomePage = () => {
                 </div>
 
                 <Guidelines />
+
+                <ParticipantCounter />
 
                 {hasCompeted ? (
                   <div className="relative bg-card/30 backdrop-blur-xl rounded-2xl p-8 md:p-10 text-center space-y-4 border border-gold/30 overflow-hidden"

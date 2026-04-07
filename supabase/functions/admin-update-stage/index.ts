@@ -12,30 +12,22 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { admin_nic, stage } = await req.json();
+    const body = await req.json();
+    const { admin_nic, stage, participant_count } = body;
 
-    if (!admin_nic || !stage) {
+    if (!admin_nic) {
       return new Response(
-        JSON.stringify({ error: "Missing admin_nic or stage" }),
+        JSON.stringify({ error: "Missing admin_nic" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const validStages = ["competing", "voting", "calculating", "winners"];
-    if (!validStages.includes(stage)) {
-      return new Response(
-        JSON.stringify({ error: "Invalid stage" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Use service role to bypass RLS and verify admin status
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Verify the NIC belongs to an admin
+    // Verify admin
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("is_admin")
@@ -49,10 +41,40 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Update the stage
+    const updateData: Record<string, unknown> = {};
+
+    if (stage) {
+      const validStages = ["competing", "voting", "calculating", "winners"];
+      if (!validStages.includes(stage)) {
+        return new Response(
+          JSON.stringify({ error: "Invalid stage" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      updateData.current_stage = stage;
+    }
+
+    if (participant_count !== undefined) {
+      const count = Number(participant_count);
+      if (!Number.isInteger(count) || count < 0) {
+        return new Response(
+          JSON.stringify({ error: "Invalid participant count" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      updateData.manual_participant_count = count;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Nothing to update" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { error: updateError } = await supabase
       .from("app_config")
-      .update({ current_stage: stage })
+      .update(updateData)
       .eq("id", 1);
 
     if (updateError) {
@@ -63,7 +85,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, stage }),
+      JSON.stringify({ success: true, ...updateData }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

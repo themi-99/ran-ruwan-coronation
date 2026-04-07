@@ -1,0 +1,1 @@
+ALTER TABLE public.app_config ADD COLUMN manual_participant_count integer NOT NULL DEFAULT 0;

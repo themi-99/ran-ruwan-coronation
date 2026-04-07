@@ -18,14 +18,17 @@ export type Database = {
         Row: {
           current_stage: string | null
           id: number
+          manual_participant_count: number
         }
         Insert: {
           current_stage?: string | null
           id?: number
+          manual_participant_count?: number
         }
         Update: {
           current_stage?: string | null
           id?: number
+          manual_participant_count?: number
         }
         Relationships: []
       }
