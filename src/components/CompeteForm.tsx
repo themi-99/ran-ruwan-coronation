@@ -70,7 +70,7 @@ const CompeteForm = ({ userNic, onComplete }: Props) => {
       <div className="space-y-2">
         <label className="text-sm font-medium text-foreground">About Me</label>
         <Textarea
-          placeholder="Tell us about yourself, your Avurudu spirit, and why you should win!"
+          placeholder="Tell us about yourself and why you should be crowned Swarna Kumara / Kumariya!"
           value={aboutMe}
           onChange={(e) => setAboutMe(e.target.value)}
           className="bg-input border-border text-foreground placeholder:text-muted-foreground min-h-[100px]"

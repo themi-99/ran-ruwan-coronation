@@ -56,9 +56,10 @@ const LoginPage = () => {
           <h1 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient drop-shadow-md">
             Ran Ruwan
           </h1>
-          <h2 className="text-xl font-heading text-gold-dark font-semibold">
-            Awurudu Abhiman 2026
-          </h2>
+           <h2 className="text-xl font-heading text-gold-dark font-semibold">
+             Awurudu Abhiman 2026
+           </h2>
+           <p className="text-sm text-gold/80 font-heading">Swarna Kumara & Kumariya 2026</p>
           <p className="text-muted-foreground text-sm font-medium">
             Ran Ruwan Gold Loans Pvt Ltd
           </p>

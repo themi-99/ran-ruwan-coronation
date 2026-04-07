@@ -60,7 +60,7 @@ const HomePage = () => {
             <img src={logo} alt="Ran Ruwan" className="w-10 h-10" />
             <div>
               <h1 className="text-lg font-heading font-bold gold-text-gradient leading-tight">Ran Ruwan</h1>
-              <p className="text-xs text-muted-foreground">Awurudu Abhiman 2026</p>
+              <p className="text-xs text-muted-foreground">Swarna Kumara & Kumariya 2026</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -97,12 +97,12 @@ const HomePage = () => {
                   <img src={avuruduBanner} alt="Avurudu" className="w-full h-32 sm:h-44 object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-background/80 flex items-center justify-center">
                     <div className="text-center">
-                      <h2 className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient drop-shadow-lg">
-                        🎊 The Competition is On! 🎊
+                     <h2 className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient drop-shadow-lg">
+                        🎊 Ran Ruwan Awurudu Abhiman 2026 🎊
                       </h2>
-                      <p className="text-foreground/80 text-sm mt-1">
-                        Show the world your Avurudu spirit!
-                      </p>
+                       <p className="text-foreground/80 text-sm mt-1">
+                        Ran Ruwan Swarna Kumara & Kumariya 2026
+                       </p>
                     </div>
                   </div>
                 </div>
@@ -122,9 +122,9 @@ const HomePage = () => {
                   </div>
                 ) : !showCompeteForm ? (
                   <div className="text-center space-y-4">
-                    <p className="text-muted-foreground">
-                      Upload your best photos and tell us about yourself to compete for Avurudu Kumara / Kumariya!
-                    </p>
+                     <p className="text-muted-foreground">
+                       Upload your best photos and tell us about yourself to compete for Swarna Kumara / Kumariya!
+                     </p>
                     <Button
                       onClick={() => setShowCompeteForm(true)}
                       className="gold-gradient text-primary-foreground font-semibold text-lg px-8 py-6 gold-glow hover:opacity-90 transition-all"

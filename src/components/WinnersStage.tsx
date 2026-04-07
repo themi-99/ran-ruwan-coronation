@@ -50,7 +50,7 @@ const WinnersStage = () => {
       <div className="text-center space-y-3 relative">
         <div className="text-5xl" style={{ animation: "crown-entrance 1s ease-out forwards" }}>👑</div>
         <h2 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient">
-          The Royal Court of Avurudu 2026
+          Ran Ruwan Awurudu Abhiman 2026
         </h2>
         <p className="text-muted-foreground">The votes are in. Behold your champions!</p>
         <div className="flex justify-center gap-2">
@@ -61,8 +61,8 @@ const WinnersStage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <WinnerCard title="Avurudu Kumara" winner={kumara} emoji="🤴" />
-        <WinnerCard title="Avurudu Kumariya" winner={kumariya} emoji="👸" />
+        <WinnerCard title="Swarna Kumara" winner={kumara} emoji="🤴" />
+        <WinnerCard title="Swarna Kumariya" winner={kumariya} emoji="👸" />
       </div>
     </div>
   );
