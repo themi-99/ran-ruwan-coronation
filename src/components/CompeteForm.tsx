@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
+import refKumara from "@/assets/ref-kumara.jpg";
+import refKumariyaSinhala from "@/assets/ref-kumariya-sinhala.jpg";
+import refKumariyaTamil from "@/assets/ref-kumariya-tamil.jpg";
 
 interface Props {
   userNic: string;
