@@ -29,7 +29,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
 
   return (
     <>
-      <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <Dialog open onOpenChange={(open) => { if (!open && !lightboxOpen) onClose(); }}>
         <DialogContent className="max-w-md rounded-2xl border border-gold/30 bg-background/95 shadow-[0_0_60px_hsl(43_76%_52%_/_0.15)] p-0 gap-0 max-h-[90vh] overflow-y-auto [&>button]:hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{contestant.full_name}</DialogTitle>
@@ -122,10 +122,12 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
       {lightboxOpen && createPortal(
         <div
           className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center animate-in fade-in duration-200"
-          onClick={() => setLightboxOpen(false)}
+          onClick={(e) => { e.stopPropagation(); e.preventDefault(); setLightboxOpen(false); }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
         >
           <button
-            onClick={() => setLightboxOpen(false)}
+            onClick={(e) => { e.stopPropagation(); e.preventDefault(); setLightboxOpen(false); }}
             className="absolute top-4 right-4 z-[10000] w-10 h-10 rounded-full bg-foreground/10 border border-foreground/20 flex items-center justify-center text-foreground hover:bg-foreground/20 hover:scale-110 transition-all"
             aria-label="Close lightbox"
           >
@@ -137,7 +139,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
               {photos.map((_, i) => (
                 <button
                   key={i}
-                  onClick={(e) => { e.stopPropagation(); setPhotoIdx(i); }}
+                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); setPhotoIdx(i); }}
                   className={`w-3 h-3 rounded-full transition-all ${
                     i === photoIdx ? "bg-gold shadow-[0_0_8px_hsl(43_76%_52%_/_0.6)]" : "bg-foreground/40"
                   }`}
