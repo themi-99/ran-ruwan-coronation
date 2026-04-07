@@ -26,9 +26,12 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   const [kumaraBoard, setKumaraBoard] = useState<LeaderEntry[]>([]);
   const [kumariyaBoard, setKumariyaBoard] = useState<LeaderEntry[]>([]);
   const [switching, setSwitching] = useState(false);
+  const [participantCount, setParticipantCount] = useState(0);
+  const [savingCount, setSavingCount] = useState(false);
 
   useEffect(() => {
     fetchLeaderboard();
+    fetchParticipantCount();
     const interval = setInterval(fetchLeaderboard, 10000);
     return () => clearInterval(interval);
   }, []);
