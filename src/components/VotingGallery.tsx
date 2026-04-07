@@ -160,40 +160,39 @@ const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, o
 
   return (
     <div
-      className={`group relative rounded-xl overflow-hidden transition-all duration-300 border border-foreground/10 backdrop-blur-sm ${
+      className={`group relative h-full min-h-[320px] aspect-[3/4] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
         isVoted ? "ring-2 ring-gold shadow-[0_0_25px_hsl(43_76%_52%/0.3)]" : "hover:shadow-[0_0_20px_hsl(43_76%_52%/0.2)]"
       }`}
-      style={{ aspectRatio: "3/4" }}
     >
       {/* Full-bleed image */}
-      <button onClick={onViewDetails} className="absolute inset-0 w-full h-full cursor-pointer focus:outline-none z-10">
+      <button onClick={onViewDetails} className="absolute inset-0 z-10 h-full w-full cursor-pointer focus:outline-none">
         {photo ? (
-          <img src={photo} alt={contestant.full_name} className="w-full h-full object-cover" loading="lazy" />
+          <img src={photo} alt={contestant.full_name} className="h-full w-full object-cover" loading="lazy" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground text-4xl">👤</div>
+          <div className="flex h-full w-full items-center justify-center bg-muted text-4xl text-muted-foreground">👤</div>
         )}
       </button>
 
       {/* Cinematic gradient fade */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent pointer-events-none z-20" style={{ top: "40%" }} />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-[42%] z-20 bg-gradient-to-t from-background via-background/90 to-transparent" />
 
       {/* Content overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 z-30 space-y-2">
-        <h4 className="font-heading font-bold text-sm md:text-base text-foreground truncate drop-shadow-lg">
+      <div className="absolute inset-x-0 bottom-0 z-30 p-4 pb-6 space-y-3">
+        <h4 className="font-heading text-sm font-bold text-foreground drop-shadow-lg md:text-base truncate">
           {contestant.full_name}
         </h4>
-        <div className="flex gap-1.5">
+        <div className="flex flex-wrap justify-start gap-2">
           <Button onClick={(e) => { e.stopPropagation(); onViewDetails(); }} variant="outline" size="sm"
-            className="flex-1 text-xs h-7 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
+            className="min-w-[96px] flex-1 text-xs h-8 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
             Details
           </Button>
           {isSelf ? (
-            <span className="flex-1 text-[10px] text-muted-foreground italic flex items-center justify-center">You</span>
+            <span className="min-w-[96px] flex-1 text-[10px] text-muted-foreground italic flex min-h-8 items-center justify-center rounded-md px-2">You</span>
           ) : isVoted ? (
-            <span className="flex-1 text-xs text-gold font-medium flex items-center justify-center">✅ Voted</span>
+            <span className="min-w-[96px] flex-1 text-xs text-gold font-medium flex min-h-8 items-center justify-center rounded-md px-2">✅ Voted</span>
           ) : (
             <Button onClick={(e) => { e.stopPropagation(); onVote(contestant.nic, category); }} disabled={hasVoted}
-              size="sm" className="flex-1 text-xs h-7 gold-gradient text-primary-foreground hover:opacity-90">
+              size="sm" className="min-w-[96px] flex-1 text-xs h-8 gold-gradient text-primary-foreground hover:opacity-90">
               {hasVoted ? "Voted" : "Vote"}
             </Button>
           )}
