@@ -48,21 +48,35 @@ const LoginPage = () => {
 
       <Fireworks />
 
-      <div className="relative z-10 w-full max-w-md space-y-8 animate-fade-in">
-        {/* Logo area */}
-        <div className="text-center space-y-3">
-          <img src={logo} alt="Ran Ruwan Gold Loan" className="w-32 h-32 mx-auto drop-shadow-lg"
+      <div className="relative z-10 w-full max-w-md space-y-10 animate-fade-in">
+        {/* Logo & Title — Movie Poster Style */}
+        <div className="text-center space-y-5">
+          <img src={logo} alt="Ran Ruwan Gold Loan" className="w-28 h-28 mx-auto drop-shadow-lg"
             style={{ animation: "float 3s ease-in-out infinite" }} />
-          <h1 className="text-3xl md:text-4xl font-heading font-bold gold-text-gradient drop-shadow-md">
-            Ran Ruwan
-          </h1>
-           <h2 className="text-xl font-heading text-gold-dark font-semibold">
-             Awurudu Abhiman 2026
-           </h2>
-           <p className="text-sm text-gold/80 font-heading">Swarna Kumara & Kumariya 2026</p>
-          <p className="text-muted-foreground text-sm font-medium">
+
+          {/* Pre-title / Sponsor line */}
+          <p className="uppercase tracking-[0.3em] text-xs font-body font-medium text-cream/70">
             Ran Ruwan Gold Loans Pvt Ltd
           </p>
+
+          {/* Main Event Title */}
+          <h1
+            className="font-heading font-black uppercase leading-tight text-4xl md:text-5xl gold-text-gradient drop-shadow-md"
+            style={{ filter: "drop-shadow(0 0 20px hsl(43 76% 52% / 0.4))" }}
+          >
+            Ran Ruwan<br />Awurudu Abhiman
+          </h1>
+
+          {/* Year */}
+          <p className="font-heading font-bold text-2xl md:text-3xl uppercase tracking-[0.5em] gold-text-gradient">
+            2026
+          </p>
+
+          {/* Subtitle / Competition Name */}
+          <p className="font-heading italic text-lg md:text-xl text-white/90 tracking-wide">
+            Swarna Kumara &amp; Kumariya
+          </p>
+
           <div className="flex justify-center gap-2 text-xl">
             {["🪔", "🌺", "✨", "🌺", "🪔"].map((e, i) => (
               <span key={i} style={{ animation: `float ${2.5 + i * 0.2}s ease-in-out infinite` }}>{e}</span>
