@@ -9,6 +9,7 @@ import CalculatingStage from "@/components/CalculatingStage";
 import WinnersStage from "@/components/WinnersStage";
 import AdminPanel from "@/components/AdminPanel";
 import Fireworks from "@/components/Fireworks";
+import Guidelines from "@/components/Guidelines";
 import logo from "@/assets/logo.png";
 import avuruduBanner from "@/assets/avurudu-banner.jpg";
 import awuruduBg from "@/assets/awurudu-bg.jpg";
