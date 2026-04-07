@@ -1,6 +1,14 @@
 import { useState } from "react";
-import { createPortal } from "react-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { X, Maximize2 } from "lucide-react";
 
 interface Contestant {
@@ -27,12 +35,18 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const photos = contestant.photo_urls || [];
 
+  const openLightbox = () => setLightboxOpen(true);
+  const closeLightbox = () => setLightboxOpen(false);
+
   return (
     <>
       <Dialog open onOpenChange={(open) => { if (!open && !lightboxOpen) onClose(); }}>
         <DialogContent className="max-w-md rounded-2xl border border-gold/30 bg-background/95 shadow-[0_0_60px_hsl(43_76%_52%_/_0.15)] p-0 gap-0 max-h-[90vh] overflow-y-auto [&>button]:hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{contestant.full_name}</DialogTitle>
+            <DialogDescription>
+              Contestant details, photos, and voting actions for {contestant.full_name}.
+            </DialogDescription>
           </DialogHeader>
 
           <button
@@ -45,7 +59,10 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
 
           <div className="flex flex-col">
             {photos.length > 0 && (
-              <div className="relative flex items-center justify-center overflow-hidden cursor-pointer" onClick={() => setLightboxOpen(true)}>
+              <div
+                className="relative flex items-center justify-center overflow-hidden cursor-pointer"
+                onClick={openLightbox}
+              >
                 <img
                   src={photos[photoIdx]}
                   alt=""
@@ -57,23 +74,35 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
                   alt={contestant.full_name}
                   className="relative w-full max-h-[45vh] object-contain z-10"
                 />
-                {/* Zoom button */}
+
                 <button
-                  onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openLightbox();
+                  }}
                   className="absolute bottom-3 right-3 z-20 w-9 h-9 rounded-full bg-background/60 border border-gold/20 flex items-center justify-center text-gold hover:bg-background/80 hover:scale-110 transition-all"
                   aria-label="Zoom image"
+                  type="button"
                 >
                   <Maximize2 className="w-4 h-4" />
                 </button>
+
                 {photos.length > 1 && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/70 rounded-full px-3 py-1.5 z-20">
                     {photos.map((_, i) => (
                       <button
                         key={i}
-                        onClick={(e) => { e.stopPropagation(); setPhotoIdx(i); }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setPhotoIdx(i);
+                        }}
                         className={`w-2.5 h-2.5 rounded-full transition-all ${
                           i === photoIdx ? "bg-gold shadow-[0_0_6px_hsl(43_76%_52%_/_0.6)]" : "bg-foreground/40"
                         }`}
+                        aria-label={`View photo ${i + 1}`}
+                        type="button"
                       />
                     ))}
                   </div>
@@ -109,6 +138,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
                     hover:scale-[1.02] active:scale-[0.98]
                     transition-all duration-200
                     disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none"
+                  type="button"
                 >
                   {hasVoted ? "Already Voted" : `Vote for ${contestant.full_name} 🗳️`}
                 </button>
@@ -118,45 +148,66 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
         </DialogContent>
       </Dialog>
 
-      {/* Lightbox overlay */}
-      {lightboxOpen && createPortal(
-        <div
-          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center animate-in fade-in duration-200"
-          onClick={(e) => { e.stopPropagation(); e.preventDefault(); setLightboxOpen(false); }}
-          onPointerDown={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          <button
-            onClick={(e) => { e.stopPropagation(); e.preventDefault(); setLightboxOpen(false); }}
-            className="absolute top-4 right-4 z-[10000] w-10 h-10 rounded-full bg-foreground/10 border border-foreground/20 flex items-center justify-center text-foreground hover:bg-foreground/20 hover:scale-110 transition-all"
-            aria-label="Close lightbox"
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogPortal>
+          <DialogOverlay className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-xl" />
+          <DialogPrimitive.Content
+            className="fixed left-1/2 top-1/2 z-[10000] w-auto max-w-[95vw] -translate-x-1/2 -translate-y-1/2 outline-none"
+            onOpenAutoFocus={(e) => e.preventDefault()}
           >
-            <X className="w-5 h-5" />
-          </button>
+            <div
+              className="relative"
+              onClick={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+            >
+              <DialogTitle className="sr-only">Expanded photo of {contestant.full_name}</DialogTitle>
+              <DialogDescription className="sr-only">
+                Enlarged contestant photo viewer for {contestant.full_name}.
+              </DialogDescription>
 
-          {photos.length > 1 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-[10000]">
-              {photos.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); setPhotoIdx(i); }}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    i === photoIdx ? "bg-gold shadow-[0_0_8px_hsl(43_76%_52%_/_0.6)]" : "bg-foreground/40"
-                  }`}
-                />
-              ))}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeLightbox();
+                }}
+                className="absolute top-4 right-4 z-[10001] w-10 h-10 rounded-full bg-background/70 border border-gold/20 flex items-center justify-center text-foreground hover:bg-background/90 hover:scale-110 transition-all"
+                aria-label="Close lightbox"
+                type="button"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <img
+                src={photos[photoIdx]}
+                alt={contestant.full_name}
+                className="max-w-[95vw] max-h-[95vh] object-contain"
+                draggable={false}
+              />
+
+              {photos.length > 1 && (
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-[10001] rounded-full bg-background/70 px-4 py-2">
+                  {photos.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setPhotoIdx(i);
+                      }}
+                      className={`w-3 h-3 rounded-full transition-all ${
+                        i === photoIdx ? "bg-gold shadow-[0_0_8px_hsl(43_76%_52%_/_0.6)]" : "bg-foreground/40"
+                      }`}
+                      aria-label={`View expanded photo ${i + 1}`}
+                      type="button"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-
-          <img
-            src={photos[photoIdx]}
-            alt={contestant.full_name}
-            className="max-w-[95vw] max-h-[95vh] object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>,
-        document.body
-      )}
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      </Dialog>
     </>
   );
 };
