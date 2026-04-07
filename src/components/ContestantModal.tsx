@@ -44,11 +44,18 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
         <div className="flex flex-col">
           {/* Image */}
           {photos.length > 0 && (
-            <div className="relative flex items-center justify-center">
+            <div className="relative flex items-center justify-center overflow-hidden">
+              {/* Cinematic blur backdrop */}
+              <img
+                src={photos[photoIdx]}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-60 scale-110"
+              />
               <img
                 src={photos[photoIdx]}
                 alt={contestant.full_name}
-                className="w-full max-h-[45vh] object-contain"
+                className="relative w-full max-h-[45vh] object-contain z-10"
               />
               {photos.length > 1 && (
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/50 backdrop-blur-sm rounded-full px-3 py-1.5">
