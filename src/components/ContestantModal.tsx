@@ -29,7 +29,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
 
   return (
     <>
-      <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <Dialog open onOpenChange={(open) => { if (!open && !lightboxOpen) onClose(); }}>
         <DialogContent className="max-w-md rounded-2xl border border-gold/30 bg-background/95 shadow-[0_0_60px_hsl(43_76%_52%_/_0.15)] p-0 gap-0 max-h-[90vh] overflow-y-auto [&>button]:hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{contestant.full_name}</DialogTitle>
