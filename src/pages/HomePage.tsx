@@ -92,17 +92,23 @@ const HomePage = () => {
           <div className="animate-fade-in">
             {stage === "competing" && (
               <div className="space-y-6">
-                {/* Festive banner */}
+                {/* Cinematic Hero Banner */}
                 <div className="relative rounded-xl overflow-hidden gold-border card-glow">
-                  <img src={avuruduBanner} alt="Avurudu" className="w-full h-32 sm:h-44 object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-background/80 flex items-center justify-center">
-                    <div className="text-center">
-                     <h2 className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient drop-shadow-lg">
-                        🎊 Ran Ruwan Awurudu Abhiman 2026 🎊
+                  <img src={avuruduBanner} alt="Avurudu" className="w-full h-40 sm:h-52 object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 flex items-center justify-center">
+                    <div className="text-center px-4 space-y-2">
+                      <h2
+                        className="text-3xl md:text-4xl lg:text-5xl font-heading font-black uppercase gold-text-gradient drop-shadow-2xl leading-tight"
+                        style={{ filter: "drop-shadow(0 0 20px hsl(43 76% 52% / 0.4))" }}
+                      >
+                        Ran Ruwan Awurudu Abhiman
                       </h2>
-                       <p className="text-foreground/80 text-sm mt-1">
-                        Ran Ruwan Swarna Kumara & Kumariya 2026
-                       </p>
+                      <p className="text-gold-light font-heading text-xl md:text-2xl tracking-[0.4em] font-bold drop-shadow-lg">
+                        2026
+                      </p>
+                      <p className="text-white/90 text-sm md:text-base font-heading italic tracking-wide drop-shadow-md">
+                        Swarna Kumara & Kumariya
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -115,10 +121,22 @@ const HomePage = () => {
                 </div>
 
                 {hasCompeted ? (
-                  <div className="bg-card/80 backdrop-blur-sm rounded-lg p-6 gold-border text-center space-y-2">
-                    <span className="text-4xl">✅</span>
-                    <p className="text-gold font-heading text-lg">You've already entered the competition!</p>
-                    <p className="text-muted-foreground text-sm">Wait for the voting stage to begin.</p>
+                  <div className="relative bg-card/30 backdrop-blur-xl rounded-2xl p-8 md:p-10 text-center space-y-4 border border-gold/30 overflow-hidden"
+                    style={{ boxShadow: "0 0 40px hsl(43 76% 52% / 0.1), inset 0 1px 0 hsl(43 76% 52% / 0.15)" }}
+                  >
+                    {/* Pulsing gold ring */}
+                    <div className="absolute inset-0 rounded-2xl border-2 border-gold/40 animate-pulse pointer-events-none" />
+
+                    <div className="text-5xl" style={{ filter: "drop-shadow(0 0 15px hsl(43 76% 52% / 0.5))" }}>🎉</div>
+                    <h3 className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient leading-snug">
+                      You are in the running!
+                    </h3>
+                    <p className="text-white/70 font-heading italic text-lg">
+                      ඔබ තරගයට ඇතුලත් වී ඇත
+                    </p>
+                    <p className="text-muted-foreground text-sm font-body leading-relaxed max-w-md mx-auto">
+                      Your submission has been received successfully. Check back when the voting stage begins!
+                    </p>
                   </div>
                 ) : !showCompeteForm ? (
                   <div className="text-center space-y-4">
