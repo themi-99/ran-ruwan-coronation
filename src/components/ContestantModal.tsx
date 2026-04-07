@@ -119,21 +119,21 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
       </Dialog>
 
       {/* Lightbox overlay */}
-      {lightboxOpen && (
+      {lightboxOpen && createPortal(
         <div
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center animate-in fade-in duration-200"
           onClick={() => setLightboxOpen(false)}
         >
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 z-[101] w-10 h-10 rounded-full bg-foreground/10 border border-foreground/20 flex items-center justify-center text-foreground hover:bg-foreground/20 hover:scale-110 transition-all"
+            className="absolute top-4 right-4 z-[10000] w-10 h-10 rounded-full bg-foreground/10 border border-foreground/20 flex items-center justify-center text-foreground hover:bg-foreground/20 hover:scale-110 transition-all"
             aria-label="Close lightbox"
           >
             <X className="w-5 h-5" />
           </button>
 
           {photos.length > 1 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-[101]">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-[10000]">
               {photos.map((_, i) => (
                 <button
                   key={i}
@@ -152,7 +152,8 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
             className="max-w-[95vw] max-h-[95vh] object-contain"
             onClick={(e) => e.stopPropagation()}
           />
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
