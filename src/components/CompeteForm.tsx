@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
+import refKumara from "@/assets/ref-kumara.jpg";
+import refKumariyaSinhala from "@/assets/ref-kumariya-sinhala.jpg";
+import refKumariyaTamil from "@/assets/ref-kumariya-tamil.jpg";
 
 interface Props {
   userNic: string;
@@ -79,10 +82,35 @@ const CompeteForm = ({ userNic, onComplete }: Props) => {
         <p className="text-xs text-muted-foreground text-right">{aboutMe.length}/500</p>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <label className="text-sm font-body font-medium text-foreground tracking-wide">
           Photos <span className="text-muted-foreground font-normal">(3-5 photos required)</span>
         </label>
+
+        {/* Reference images */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 space-y-3">
+          <p className="text-xs font-body font-semibold text-gold tracking-wide uppercase">
+            📸 Reference — Accepted Dress Codes & Poses
+          </p>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { src: refKumara, label: "Kumara – සරම & කමිසය" },
+              { src: refKumariyaSinhala, label: "Kumariya – රෙද්ද & හැට්ටය" },
+              { src: refKumariyaTamil, label: "Kumariya – பட்டு சேலை" },
+            ].map((ref, i) => (
+              <div key={i} className="space-y-1.5">
+                <div className="aspect-[3/4] rounded-lg overflow-hidden border border-gold/30">
+                  <img src={ref.src} alt={ref.label} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <p className="text-[10px] md:text-xs text-center text-muted-foreground leading-tight">{ref.label}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-muted-foreground/70 text-center italic">
+            Selfie සහ තේමාවට නොගැළපෙන පින්තූර පිළිගනු නොලැබේ
+          </p>
+        </div>
+
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
           {previews.map((src, i) => (
             <div key={i} className="relative aspect-square rounded-lg overflow-hidden gold-border">
