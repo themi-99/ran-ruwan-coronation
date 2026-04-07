@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import avuruduFamily from "@/assets/avurudu-family.jpg";
+import coronationCrown from "@/assets/coronation-crown.png";
 
 interface Winner {
   nic: string;
@@ -42,9 +42,16 @@ const WinnersStage = () => {
 
   return (
     <div className="space-y-10 animate-fade-in relative">
-      {/* Festive background image */}
-      <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-64 h-40 opacity-15 pointer-events-none">
-        <img src={avuruduFamily} alt="" className="w-full h-full object-contain" />
+      {/* Coronation tapestry */}
+      <div className="flex justify-center pointer-events-none">
+        <img
+          src={coronationCrown}
+          alt="Coronation crown and tapestry"
+          className="w-72 md:w-96 h-auto drop-shadow-[0_0_40px_hsl(43_76%_52%_/_0.5)]"
+          width={1024}
+          height={1024}
+          loading="lazy"
+        />
       </div>
 
       <div className="text-center space-y-4 relative">
