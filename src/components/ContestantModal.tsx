@@ -58,7 +58,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
                 className="relative w-full max-h-[45vh] object-contain z-10"
               />
               {photos.length > 1 && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/50 backdrop-blur-sm rounded-full px-3 py-1.5">
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-background/70 rounded-full px-3 py-1.5 z-20">
                   {photos.map((_, i) => (
                     <button
                       key={i}
