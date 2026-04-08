@@ -58,29 +58,31 @@ const HomePage = () => {
       <header className="border-b border-border bg-card/70 backdrop-blur-md sticky top-0 z-50 relative">
         <div className="absolute bottom-0 left-0 right-0 h-[2px] gold-gradient" />
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={logo} alt="Ran Ruwan" className="w-10 h-10" />
-            <div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <img src={logo} alt="Ran Ruwan" className="w-10 h-10 flex-shrink-0" />
+            <div className="min-w-0">
               <h1 className="text-lg font-heading font-bold gold-text-gradient leading-tight">Ran Ruwan</h1>
               <p className="text-xs text-muted-foreground">Swarna Kumara & Kumariya 2026</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-foreground hidden sm:block">
-              Welcome, <span className="text-gold font-medium">{user.full_name}</span>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-xs sm:text-sm text-foreground block truncate max-w-[100px] sm:max-w-none">
+              <span className="hidden sm:inline">Welcome, </span>
+              <span className="sm:hidden">Hi, </span>
+              <span className="text-gold font-medium">{user.full_name}</span>
             </span>
             {user.is_admin && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAdmin(!showAdmin)}
-                className="border-gold text-gold hover:bg-gold/10"
+                className="border-gold text-gold hover:bg-gold/10 flex-shrink-0"
               >
                 {showAdmin ? "Close Admin" : "Admin Panel"}
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={() => { logout(); navigate("/"); }}
-              className="text-muted-foreground hover:text-foreground">
+              className="text-muted-foreground hover:text-foreground flex-shrink-0">
               Logout
             </Button>
           </div>
