@@ -24,13 +24,13 @@ interface Props {
   contestant: Contestant;
   category: "kumara" | "kumariya";
   isVoted: boolean;
-  hasVoted: boolean;
+  hasReachedLimit: boolean;
   isSelf: boolean;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
   onClose: () => void;
 }
 
-const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, onClose }: Props) => {
+const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const photos = contestant.photo_urls || [];
@@ -133,7 +133,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
               ) : (
                 <button
                   onClick={() => onVote(contestant.nic, category)}
-                  disabled={hasVoted}
+                  disabled={hasReachedLimit}
                   className="w-full py-4 rounded-xl font-heading font-bold text-lg tracking-wide
                     gold-gradient text-primary-foreground
                     shadow-[0_0_25px_hsl(43_76%_52%_/_0.3)]
@@ -143,7 +143,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVo
                     disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none"
                   type="button"
                 >
-                  {hasVoted ? "Already Voted" : `Vote for ${contestant.full_name} 🗳️`}
+                  {hasReachedLimit ? "Limit Reached" : `Vote for ${contestant.full_name} 🗳️`}
                 </button>
               )}
             </div>

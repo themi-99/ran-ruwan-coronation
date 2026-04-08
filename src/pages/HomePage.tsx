@@ -162,7 +162,7 @@ const HomePage = () => {
                 )}
               </div>
             )}
-            {stage === "voting" && <VotingGallery voterNic={user.nic} />}
+            {stage === "voting" && <VotingGallery voterNic={user.nic} isJudge={user.is_judge === true} />}
             {stage === "calculating" && <CalculatingStage />}
             {stage === "winners" && <WinnersStage />}
           </div>
