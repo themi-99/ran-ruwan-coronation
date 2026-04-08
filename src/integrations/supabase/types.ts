@@ -70,6 +70,7 @@ export type Database = {
           full_name: string
           gender: string | null
           is_admin: boolean | null
+          is_judge: boolean
           nic: string
         }
         Insert: {
@@ -77,6 +78,7 @@ export type Database = {
           full_name: string
           gender?: string | null
           is_admin?: boolean | null
+          is_judge?: boolean
           nic: string
         }
         Update: {
@@ -84,6 +86,7 @@ export type Database = {
           full_name?: string
           gender?: string | null
           is_admin?: boolean | null
+          is_judge?: boolean
           nic?: string
         }
         Relationships: []
