@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ContestantModal from "@/components/ContestantModal";
+import JudgeBallotCounter from "@/components/JudgeBallotCounter";
 
 interface Contestant {
   id: string;
@@ -15,15 +16,21 @@ interface Contestant {
 
 interface Props {
   voterNic: string;
+  isJudge?: boolean;
 }
 
-const VotingGallery = ({ voterNic }: Props) => {
+const NORMAL_LIMIT = 1;
+const JUDGE_LIMIT = 5;
+
+const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
   const [contestants, setContestants] = useState<Contestant[]>([]);
-  const [votedMale, setVotedMale] = useState<string | null>(null);
-  const [votedFemale, setVotedFemale] = useState<string | null>(null);
+  const [maleVotes, setMaleVotes] = useState<string[]>([]);
+  const [femaleVotes, setFemaleVotes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContestant, setSelectedContestant] = useState<Contestant | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"kumara" | "kumariya">("kumara");
+
+  const voteLimit = isJudge ? JUDGE_LIMIT : NORMAL_LIMIT;
 
   useEffect(() => { fetchData(); }, []);
 
@@ -39,22 +46,31 @@ const VotingGallery = ({ voterNic }: Props) => {
     }
     const { data: votes } = await supabase.from("votes").select("*").eq("voter_nic", voterNic);
     if (votes) {
-      const maleVote = votes.find((v) => v.category === "kumara");
-      const femaleVote = votes.find((v) => v.category === "kumariya");
-      if (maleVote) setVotedMale(maleVote.candidate_nic);
-      if (femaleVote) setVotedFemale(femaleVote.candidate_nic);
+      setMaleVotes(votes.filter((v) => v.category === "kumara").map((v) => v.candidate_nic!));
+      setFemaleVotes(votes.filter((v) => v.category === "kumariya").map((v) => v.candidate_nic!));
     }
     setLoading(false);
   };
 
   const vote = async (candidateNic: string, category: "kumara" | "kumariya") => {
-    if ((category === "kumara" && votedMale) || (category === "kumariya" && votedFemale)) {
-      toast.error("You've already voted in this category!"); return;
+    const currentVotes = category === "kumara" ? maleVotes : femaleVotes;
+    if (currentVotes.length >= voteLimit) {
+      toast.error(`You've used all ${voteLimit} vote(s) in this category!`); return;
     }
-    const { error } = await supabase.from("votes").insert({ voter_nic: voterNic, candidate_nic: candidateNic, category });
-    if (error) { toast.error("Failed to vote. You may have already voted."); return; }
-    if (category === "kumara") setVotedMale(candidateNic);
-    else setVotedFemale(candidateNic);
+    if (currentVotes.includes(candidateNic)) {
+      toast.error("You've already voted for this contestant!"); return;
+    }
+
+    const { data, error } = await supabase.functions.invoke("cast-vote", {
+      body: { voter_nic: voterNic, candidate_nic: candidateNic, category },
+    });
+
+    if (error || data?.error) {
+      toast.error(data?.error || "Failed to vote."); return;
+    }
+
+    if (category === "kumara") setMaleVotes((prev) => [...prev, candidateNic]);
+    else setFemaleVotes((prev) => [...prev, candidateNic]);
     toast.success("Vote cast! 🗳️");
   };
 
@@ -62,15 +78,18 @@ const VotingGallery = ({ voterNic }: Props) => {
   const females = contestants.filter((c) => c.gender?.toLowerCase() === "female");
 
   const getVoteState = (nic: string, category: "kumara" | "kumariya") => {
-    const voted = category === "kumara" ? votedMale : votedFemale;
-    return { isVoted: voted === nic, hasVoted: !!voted, isSelf: nic === voterNic };
+    const votes = category === "kumara" ? maleVotes : femaleVotes;
+    return {
+      isVoted: votes.includes(nic),
+      hasReachedLimit: votes.length >= voteLimit,
+      isSelf: nic === voterNic,
+    };
   };
 
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading contestants...</div>;
 
   return (
     <div className="relative space-y-10 animate-fade-in p-6">
-      {/* Frosted glass wrapper */}
       <div className="absolute inset-0 -m-6 bg-black/20 backdrop-blur-md rounded-3xl border border-foreground/10 pointer-events-none z-0" />
 
       {/* Cinematic Header */}
@@ -82,9 +101,22 @@ const VotingGallery = ({ voterNic }: Props) => {
           🗳️ Cast Your Vote 🗳️
         </h2>
         <p className="font-heading italic text-sm md:text-base tracking-wide" style={{ color: "hsl(40 20% 75%)" }}>
-          Vote for one Swarna Kumara and one Swarna Kumariya
+          {isJudge
+            ? "As a Judge, you may cast up to 5 votes per category"
+            : "Vote for one Swarna Kumara and one Swarna Kumariya"}
         </p>
       </div>
+
+      {/* Judge Ballot Counter */}
+      {isJudge && (
+        <div className="relative z-10">
+          <JudgeBallotCounter
+            maleVotesCast={maleVotes.length}
+            femaleVotesCast={femaleVotes.length}
+            limit={JUDGE_LIMIT}
+          />
+        </div>
+      )}
 
       {/* Kumara Section */}
       <section className="space-y-4 relative z-10">
@@ -138,7 +170,6 @@ const VotingGallery = ({ voterNic }: Props) => {
         )}
       </section>
 
-      {/* Detail Modal */}
       {selectedContestant && (
         <ContestantModal contestant={selectedContestant} category={selectedCategory}
           {...getVoteState(selectedContestant.nic, selectedCategory)}
@@ -149,10 +180,10 @@ const VotingGallery = ({ voterNic }: Props) => {
 };
 
 /* ── Premium "Character Poster" Card ── */
-const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, onViewDetails }: {
+const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onViewDetails }: {
   contestant: { id: string; nic: string; full_name: string; photo_urls: string[] | null };
   category: "kumara" | "kumariya";
-  isVoted: boolean; hasVoted: boolean; isSelf: boolean;
+  isVoted: boolean; hasReachedLimit: boolean; isSelf: boolean;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
   onViewDetails: () => void;
 }) => {
@@ -164,7 +195,6 @@ const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, o
         isVoted ? "ring-2 ring-gold shadow-[0_0_25px_hsl(43_76%_52%/0.3)]" : "hover:shadow-[0_0_20px_hsl(43_76%_52%/0.2)]"
       }`}
     >
-      {/* Full-bleed image */}
       <button onClick={onViewDetails} className="absolute inset-0 z-10 h-full w-full cursor-pointer focus:outline-none">
         {photo ? (
           <img src={photo} alt={contestant.full_name} className="h-full w-full object-cover" loading="lazy" />
@@ -173,10 +203,8 @@ const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, o
         )}
       </button>
 
-      {/* Cinematic gradient fade */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 top-[42%] z-20 bg-gradient-to-t from-background via-background/90 to-transparent" />
 
-      {/* Content overlay */}
       <div className="absolute inset-x-0 bottom-0 z-30 p-4 pb-6 space-y-3">
         <h4 className="font-heading text-sm font-bold text-foreground drop-shadow-lg md:text-base truncate">
           {contestant.full_name}
@@ -191,9 +219,9 @@ const PosterCard = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, o
           ) : isVoted ? (
             <span className="min-w-[96px] flex-1 text-xs text-gold font-medium flex min-h-8 items-center justify-center rounded-md px-2">✅ Voted</span>
           ) : (
-            <Button onClick={(e) => { e.stopPropagation(); onVote(contestant.nic, category); }} disabled={hasVoted}
+            <Button onClick={(e) => { e.stopPropagation(); onVote(contestant.nic, category); }} disabled={hasReachedLimit}
               size="sm" className="min-w-[96px] flex-1 text-xs h-8 gold-gradient text-primary-foreground hover:opacity-90">
-              {hasVoted ? "Voted" : "Vote"}
+              {hasReachedLimit ? "Limit Reached" : "Vote"}
             </Button>
           )}
         </div>

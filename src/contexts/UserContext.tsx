@@ -7,6 +7,7 @@ export interface UserProfile {
   gender: string | null;
   branch: string | null;
   is_admin: boolean | null;
+  is_judge: boolean | null;
 }
 
 interface UserContextType {
