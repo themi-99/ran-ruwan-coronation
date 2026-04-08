@@ -76,13 +76,13 @@ const HomePage = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAdmin(!showAdmin)}
-                className="border-gold text-gold hover:bg-gold/10"
+                className="border-gold text-gold hover:bg-gold/10 flex-shrink-0"
               >
                 {showAdmin ? "Close Admin" : "Admin Panel"}
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={() => { logout(); navigate("/"); }}
-              className="text-muted-foreground hover:text-foreground">
+              className="text-muted-foreground hover:text-foreground flex-shrink-0">
               Logout
             </Button>
           </div>
