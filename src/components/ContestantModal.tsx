@@ -133,7 +133,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSel
               ) : (
                 <button
                   onClick={() => onVote(contestant.nic, category)}
-                  disabled={hasVoted}
+                  disabled={hasReachedLimit}
                   className="w-full py-4 rounded-xl font-heading font-bold text-lg tracking-wide
                     gold-gradient text-primary-foreground
                     shadow-[0_0_25px_hsl(43_76%_52%_/_0.3)]
@@ -143,7 +143,7 @@ const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSel
                     disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none"
                   type="button"
                 >
-                  {hasVoted ? "Already Voted" : `Vote for ${contestant.full_name} 🗳️`}
+                  {hasReachedLimit ? "Limit Reached" : `Vote for ${contestant.full_name} 🗳️`}
                 </button>
               )}
             </div>
