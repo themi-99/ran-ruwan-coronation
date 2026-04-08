@@ -76,6 +76,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
 
   const males = contestants.filter((c) => c.gender?.toLowerCase() === "male");
   const females = contestants.filter((c) => c.gender?.toLowerCase() === "female");
+  const visibleContestants = selectedCategory === "kumara" ? males : females;
 
   const getVoteState = (nic: string, category: "kumara" | "kumariya") => {
     const votes = category === "kumara" ? maleVotes : femaleVotes;
@@ -89,10 +90,10 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading contestants...</div>;
 
   return (
-    <div className="relative space-y-10 animate-fade-in p-4 md:p-6 w-full max-w-7xl mx-auto">
+    <div className="relative space-y-8 animate-fade-in p-4 md:p-6 w-full max-w-7xl mx-auto">
       <div className="absolute inset-0 -m-4 md:-m-6 bg-black/20 backdrop-blur-md rounded-3xl border border-foreground/10 pointer-events-none z-0" />
 
-      {/* Cinematic Header */}
+      {/* Header */}
       <div className="text-center space-y-3 relative z-10">
         <h2
           className="text-4xl md:text-5xl font-heading font-black uppercase gold-text-gradient tracking-wide"
@@ -107,67 +108,68 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
         </p>
       </div>
 
-      {/* Judge Ballot Counter */}
+      {/* Category Toggle */}
+      <div className="relative z-10 grid grid-cols-2 gap-3">
+        <button
+          onClick={() => setSelectedCategory("kumara")}
+          className={`relative py-3 px-4 rounded-xl font-heading font-bold text-sm md:text-base uppercase tracking-widest transition-all duration-300 overflow-hidden ${
+            selectedCategory === "kumara"
+              ? "gold-gradient text-primary-foreground shadow-[0_0_25px_hsl(43_76%_52%/0.4)]"
+              : "bg-transparent border-2 border-gold/40 text-foreground/80 hover:border-gold/70 hover:bg-gold/5"
+          }`}
+        >
+          👑 Swarna Kumara
+        </button>
+        <button
+          onClick={() => setSelectedCategory("kumariya")}
+          className={`relative py-3 px-4 rounded-xl font-heading font-bold text-sm md:text-base uppercase tracking-widest transition-all duration-300 overflow-hidden ${
+            selectedCategory === "kumariya"
+              ? "gold-gradient text-primary-foreground shadow-[0_0_25px_hsl(43_76%_52%/0.4)]"
+              : "bg-transparent border-2 border-gold/40 text-foreground/80 hover:border-gold/70 hover:bg-gold/5"
+          }`}
+        >
+          👑 Swarna Kumariya
+        </button>
+      </div>
+
+      {/* Judge Ballot – contextual to selected category */}
       {isJudge && (
         <div className="relative z-10">
           <JudgeBallotCounter
             maleVotesCast={maleVotes.length}
             femaleVotesCast={femaleVotes.length}
             limit={JUDGE_LIMIT}
+            activeCategory={selectedCategory}
           />
         </div>
       )}
 
-      {/* Kumara Section */}
-      <section className="space-y-4 relative z-10">
-        <div className="flex items-center gap-4">
-          <h3
-            className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient whitespace-nowrap"
-            style={{ filter: "drop-shadow(0 0 10px hsl(43 76% 52% / 0.3))" }}
-          >
-            👑 Swarna Kumara
-          </h3>
-          <div className="flex-1 h-px bg-gradient-to-r from-gold/60 via-gold/20 to-transparent" />
+      {/* Contestant Grid with cross-fade */}
+      <section className="relative z-10">
+        <div
+          key={selectedCategory}
+          className="animate-fade-in"
+        >
+          {visibleContestants.length === 0 ? (
+            <p className="text-muted-foreground text-center py-8">No contestants yet in this category.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {visibleContestants.map((c) => {
+                const vs = getVoteState(c.nic, selectedCategory);
+                return (
+                  <PosterCard
+                    key={c.id}
+                    contestant={c}
+                    category={selectedCategory}
+                    {...vs}
+                    onVote={vote}
+                    onViewDetails={() => { setSelectedContestant(c); }}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
-        {males.length === 0 ? (
-          <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {males.map((c) => {
-              const vs = getVoteState(c.nic, "kumara");
-              return (
-                <PosterCard key={c.id} contestant={c} category="kumara" {...vs}
-                  onVote={vote} onViewDetails={() => { setSelectedContestant(c); setSelectedCategory("kumara"); }} />
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* Kumariya Section */}
-      <section className="space-y-4 relative z-10">
-        <div className="flex items-center gap-4">
-          <h3
-            className="text-2xl md:text-3xl font-heading font-bold gold-text-gradient whitespace-nowrap"
-            style={{ filter: "drop-shadow(0 0 10px hsl(43 76% 52% / 0.3))" }}
-          >
-            👑 Swarna Kumariya
-          </h3>
-          <div className="flex-1 h-px bg-gradient-to-r from-gold/60 via-gold/20 to-transparent" />
-        </div>
-        {females.length === 0 ? (
-          <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {females.map((c) => {
-              const vs = getVoteState(c.nic, "kumariya");
-              return (
-                <PosterCard key={c.id} contestant={c} category="kumariya" {...vs}
-                  onVote={vote} onViewDetails={() => { setSelectedContestant(c); setSelectedCategory("kumariya"); }} />
-              );
-            })}
-          </div>
-        )}
       </section>
 
       {selectedContestant && (
@@ -211,17 +213,17 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, on
         </h4>
         <div className="flex flex-wrap justify-start gap-2">
           <Button onClick={(e) => { e.stopPropagation(); onViewDetails(); }} variant="outline" size="sm"
-            className="min-w-[96px] flex-1 text-xs h-8 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
+            className="min-w-[80px] flex-1 text-xs h-8 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
             Details
           </Button>
           {isSelf ? (
-            <span className="min-w-[96px] flex-1 text-[10px] text-muted-foreground italic flex min-h-8 items-center justify-center rounded-md px-2">You</span>
+            <span className="min-w-[80px] flex-1 text-[10px] text-muted-foreground italic flex min-h-8 items-center justify-center rounded-md px-2">You</span>
           ) : isVoted ? (
-            <span className="min-w-[96px] flex-1 text-xs text-gold font-medium flex min-h-8 items-center justify-center rounded-md px-2">✅ Voted</span>
+            <span className="min-w-[80px] flex-1 text-xs text-gold font-medium flex min-h-8 items-center justify-center rounded-md px-2">✅ Voted</span>
           ) : (
             <Button onClick={(e) => { e.stopPropagation(); onVote(contestant.nic, category); }} disabled={hasReachedLimit}
-              size="sm" className="min-w-[96px] flex-1 text-xs h-8 gold-gradient text-primary-foreground hover:opacity-90">
-              {hasReachedLimit ? "Limit Reached" : "Vote"}
+              size="sm" className="min-w-[80px] flex-1 text-xs h-8 gold-gradient text-primary-foreground hover:opacity-90">
+              {hasReachedLimit ? "Limit" : "Vote"}
             </Button>
           )}
         </div>
