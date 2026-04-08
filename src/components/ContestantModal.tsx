@@ -24,7 +24,7 @@ interface Props {
   contestant: Contestant;
   category: "kumara" | "kumariya";
   isVoted: boolean;
-  hasVoted: boolean;
+  hasReachedLimit: boolean;
   isSelf: boolean;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
   onClose: () => void;
