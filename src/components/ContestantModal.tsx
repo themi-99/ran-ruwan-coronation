@@ -30,7 +30,7 @@ interface Props {
   onClose: () => void;
 }
 
-const ContestantModal = ({ contestant, category, isVoted, hasVoted, isSelf, onVote, onClose }: Props) => {
+const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const photos = contestant.photo_urls || [];
