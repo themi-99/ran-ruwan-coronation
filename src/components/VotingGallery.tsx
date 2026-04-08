@@ -89,8 +89,8 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading contestants...</div>;
 
   return (
-    <div className="relative space-y-10 animate-fade-in p-6">
-      <div className="absolute inset-0 -m-6 bg-black/20 backdrop-blur-md rounded-3xl border border-foreground/10 pointer-events-none z-0" />
+    <div className="relative space-y-10 animate-fade-in p-4 md:p-6 w-full max-w-7xl mx-auto">
+      <div className="absolute inset-0 -m-4 md:-m-6 bg-black/20 backdrop-blur-md rounded-3xl border border-foreground/10 pointer-events-none z-0" />
 
       {/* Cinematic Header */}
       <div className="text-center space-y-3 relative z-10">
@@ -132,7 +132,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
         {males.length === 0 ? (
           <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {males.map((c) => {
               const vs = getVoteState(c.nic, "kumara");
               return (
@@ -158,7 +158,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
         {females.length === 0 ? (
           <p className="text-muted-foreground text-center py-4">No contestants yet in this category.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {females.map((c) => {
               const vs = getVoteState(c.nic, "kumariya");
               return (
@@ -191,7 +191,7 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, on
 
   return (
     <div
-      className={`group relative h-full min-h-[320px] aspect-[3/4] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
+      className={`group relative w-full min-h-[320px] aspect-[3/4] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
         isVoted ? "ring-2 ring-gold shadow-[0_0_25px_hsl(43_76%_52%/0.3)]" : "hover:shadow-[0_0_20px_hsl(43_76%_52%/0.2)]"
       }`}
     >
