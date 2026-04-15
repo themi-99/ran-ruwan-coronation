@@ -139,6 +139,9 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
         <Leaderboard title="👑 Swarna Kumara Leaderboard" entries={kumaraBoard} />
         <Leaderboard title="👑 Swarna Kumariya Leaderboard" entries={kumariyaBoard} />
       </div>
+
+      {/* Contestants Directory */}
+      <ContestantsDirectory />
     </div>
   );
 };
