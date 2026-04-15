@@ -138,13 +138,13 @@ const ContestantsDirectory = () => {
           </DialogHeader>
 
           {selected?.photo_urls && selected.photo_urls.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-3 flex flex-col items-center">
               {selected.photo_urls.map((url, i) => (
                 <img
                   key={i}
                   src={url}
                   alt={`${selected.full_name} photo ${i + 1}`}
-                  className="w-full rounded-lg object-cover max-h-72"
+                  className="max-h-[70vh] w-auto max-w-full rounded-lg object-contain"
                 />
               ))}
             </div>
