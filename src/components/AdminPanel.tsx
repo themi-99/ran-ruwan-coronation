@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import ContestantsDirectory from "@/components/ContestantsDirectory";
 
 interface Props {
   currentStage: string;
@@ -138,6 +139,9 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
         <Leaderboard title="👑 Swarna Kumara Leaderboard" entries={kumaraBoard} />
         <Leaderboard title="👑 Swarna Kumariya Leaderboard" entries={kumariyaBoard} />
       </div>
+
+      {/* Contestants Directory */}
+      <ContestantsDirectory />
     </div>
   );
 };
