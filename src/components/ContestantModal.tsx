@@ -20,17 +20,34 @@ interface Contestant {
   gender: string | null;
 }
 
+interface JudgeScore {
+  id: string;
+  candidate_nic: string;
+  category: string;
+  medal: string;
+  points: number;
+}
+
+const MEDALS = [
+  { key: "gold", emoji: "🥇", label: "Gold", points: 5 },
+  { key: "silver", emoji: "🥈", label: "Silver", points: 3 },
+  { key: "bronze", emoji: "🥉", label: "Bronze", points: 1 },
+] as const;
+
 interface Props {
   contestant: Contestant;
   category: "kumara" | "kumariya";
   isVoted: boolean;
   hasReachedLimit: boolean;
   isSelf: boolean;
+  isJudge?: boolean;
+  judgeScore?: JudgeScore | null;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
+  onMedalClick?: (nic: string, cat: "kumara" | "kumariya", medal: string, points: number) => void;
   onClose: () => void;
 }
 
-const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onClose }: Props) => {
+const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isJudge, judgeScore, onVote, onMedalClick, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const photos = contestant.photo_urls || [];
@@ -124,7 +141,34 @@ const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSel
                 </p>
               )}
 
-              {isSelf ? (
+              {isJudge && onMedalClick ? (
+                <div className="w-full space-y-3">
+                  <p className="text-muted-foreground text-sm font-heading">Award a medal:</p>
+                  <div className="flex gap-3 justify-center">
+                    {MEDALS.map((m) => (
+                      <button
+                        key={m.key}
+                        onClick={() => onMedalClick(contestant.nic, category, m.key, m.points)}
+                        className={`flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all duration-200 ${
+                          judgeScore?.medal === m.key
+                            ? "bg-gold/20 ring-2 ring-gold scale-105 shadow-[0_0_15px_hsl(43_76%_52%/0.4)]"
+                            : "bg-foreground/10 hover:bg-foreground/20 hover:scale-105"
+                        }`}
+                      >
+                        <span className="text-2xl">{m.emoji}</span>
+                        <span className="text-xs font-heading font-bold text-foreground">{m.label}</span>
+                        <span className="text-[10px] text-muted-foreground">{m.points} pts</span>
+                      </button>
+                    ))}
+                  </div>
+                  {judgeScore && (
+                    <p className="text-gold text-sm font-heading">
+                      ✅ {judgeScore.medal.charAt(0).toUpperCase() + judgeScore.medal.slice(1)} awarded ({judgeScore.points} pts)
+                      <span className="text-muted-foreground text-xs ml-1">(click again to undo)</span>
+                    </p>
+                  )}
+                </div>
+              ) : isSelf ? (
                 <p className="text-muted-foreground italic text-sm">You can't vote for yourself</p>
               ) : isVoted ? (
                 <div className="text-gold font-heading font-semibold text-lg">

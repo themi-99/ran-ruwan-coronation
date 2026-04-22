@@ -14,7 +14,10 @@ interface Props {
 interface LeaderEntry {
   nic: string;
   full_name: string;
-  votes: number;
+  branch: string;
+  normalVotes: number;
+  judgePoints: number;
+  totalScore: number;
 }
 
 const STAGES = [
@@ -39,21 +42,38 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   }, []);
 
   const fetchLeaderboard = async () => {
-    const { data: votes } = await supabase.from("votes").select("*");
-    const { data: profiles } = await supabase.from("profiles").select("nic, full_name");
+    const [{ data: votes }, { data: profiles }, { data: judgeScores }] = await Promise.all([
+      supabase.from("votes").select("*"),
+      supabase.from("profiles").select("nic, full_name, branch"),
+      supabase.from("judge_scores").select("*"),
+    ]);
     if (!votes || !profiles) return;
 
-    const count = (category: string) => {
-      const catVotes = votes.filter((v) => v.category === category);
-      const counts: Record<string, number> = {};
-      catVotes.forEach((v) => { if (v.candidate_nic) counts[v.candidate_nic] = (counts[v.candidate_nic] || 0) + 1; });
-      return Object.entries(counts)
-        .map(([nic, c]) => ({ nic, full_name: profiles.find((p) => p.nic === nic)?.full_name || "Unknown", votes: c }))
-        .sort((a, b) => b.votes - a.votes);
+    const buildBoard = (category: string): LeaderEntry[] => {
+      // Get all candidate NICs from both votes and judge_scores for this category
+      const allNics = new Set<string>();
+      votes.filter((v) => v.category === category).forEach((v) => { if (v.candidate_nic) allNics.add(v.candidate_nic); });
+      (judgeScores || []).filter((s) => s.category === category).forEach((s) => { if (s.candidate_nic) allNics.add(s.candidate_nic); });
+
+      return Array.from(allNics).map((nic) => {
+        const profile = profiles.find((p) => p.nic === nic);
+        const normalVotes = votes.filter((v) => v.category === category && v.candidate_nic === nic).length;
+        const judgePoints = (judgeScores || [])
+          .filter((s) => s.category === category && s.candidate_nic === nic)
+          .reduce((sum, s) => sum + (s.points as number), 0);
+        return {
+          nic,
+          full_name: profile?.full_name || "Unknown",
+          branch: profile?.branch || "—",
+          normalVotes,
+          judgePoints,
+          totalScore: normalVotes + judgePoints,
+        };
+      }).sort((a, b) => b.totalScore - a.totalScore);
     };
 
-    setKumaraBoard(count("kumara"));
-    setKumariyaBoard(count("kumariya"));
+    setKumaraBoard(buildBoard("kumara"));
+    setKumariyaBoard(buildBoard("kumariya"));
   };
 
   const fetchParticipantCount = async () => {
@@ -134,10 +154,10 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
         <p className="text-sm text-muted-foreground font-body">Current: <span className="text-gold font-semibold">{currentStage}</span></p>
       </div>
 
-      {/* Leaderboards */}
+      {/* Combined Leaderboards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Leaderboard title="👑 Swarna Kumara Leaderboard" entries={kumaraBoard} />
-        <Leaderboard title="👑 Swarna Kumariya Leaderboard" entries={kumariyaBoard} />
+        <CombinedLeaderboard title="👑 Swarna Kumara" entries={kumaraBoard} />
+        <CombinedLeaderboard title="👑 Swarna Kumariya" entries={kumariyaBoard} />
       </div>
 
       {/* Contestants Directory */}
@@ -146,22 +166,36 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   );
 };
 
-const Leaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[] }) => (
+const CombinedLeaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[] }) => (
   <div className="bg-card rounded-lg p-5 gold-border space-y-3">
     <h3 className="font-heading font-bold text-lg text-gold tracking-wide">{title}</h3>
     {entries.length === 0 ? (
-      <p className="text-muted-foreground text-sm">No votes yet</p>
+      <p className="text-muted-foreground text-sm">No scores yet</p>
     ) : (
-      <div className="space-y-2">
+      <div className="space-y-0">
+        {/* Header row */}
+        <div className="flex items-center gap-2 py-2 border-b border-border text-[10px] uppercase tracking-wider text-muted-foreground font-heading">
+          <span className="w-6">#</span>
+          <span className="flex-1">Name</span>
+          <span className="w-14 text-center">Branch</span>
+          <span className="w-12 text-center">Votes</span>
+          <span className="w-12 text-center">Judge</span>
+          <span className="w-14 text-center font-bold">Total</span>
+        </div>
         {entries.map((e, i) => (
-          <div key={e.nic} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-            <div className="flex items-center gap-2">
-              <span className={`text-lg ${i === 0 ? "text-gold" : "text-muted-foreground"}`}>
-                {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`}
-              </span>
-              <span className="text-foreground text-sm font-body">{e.full_name}</span>
-            </div>
-            <span className="text-gold font-semibold">{e.votes}</span>
+          <div key={e.nic} className={`flex items-center gap-2 py-2 border-b border-border/50 last:border-0 ${i === 0 ? "bg-gold/5" : ""}`}>
+            <span className={`w-6 text-sm ${i === 0 ? "text-gold font-bold" : "text-muted-foreground"}`}>
+              {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
+            </span>
+            <span className={`flex-1 text-sm font-body truncate ${i === 0 ? "text-gold font-semibold" : "text-foreground"}`}>
+              {e.full_name}
+            </span>
+            <span className="w-14 text-center text-xs text-muted-foreground truncate">{e.branch}</span>
+            <span className="w-12 text-center text-sm text-foreground">{e.normalVotes}</span>
+            <span className="w-12 text-center text-sm text-foreground">{e.judgePoints}</span>
+            <span className={`w-14 text-center text-sm font-bold ${i === 0 ? "text-gold" : "text-foreground"}`}>
+              {e.totalScore}
+            </span>
           </div>
         ))}
       </div>
