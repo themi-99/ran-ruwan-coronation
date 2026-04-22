@@ -64,6 +64,36 @@ export type Database = {
           },
         ]
       }
+      judge_scores: {
+        Row: {
+          candidate_nic: string
+          category: string
+          created_at: string
+          id: string
+          judge_nic: string
+          medal: string
+          points: number
+        }
+        Insert: {
+          candidate_nic: string
+          category: string
+          created_at?: string
+          id?: string
+          judge_nic: string
+          medal: string
+          points: number
+        }
+        Update: {
+          candidate_nic?: string
+          category?: string
+          created_at?: string
+          id?: string
+          judge_nic?: string
+          medal?: string
+          points?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           branch: string | null
