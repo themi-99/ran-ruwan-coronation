@@ -1,20 +1,30 @@
 
 
-## Fix: App broken due to duplicate MEDALS constant
+## Increase Normal Vote Limit from 1 to 2 per Category
 
-### Problem
-The app is completely non-functional right now because `VotingGallery.tsx` has a duplicate `const MEDALS` declaration (lines 34-44). This causes a `SyntaxError` that prevents the entire app from loading — which is why no one can log in.
+### What changes
+Two constants updated from `1` to `2`:
 
-A secondary issue: auth logs show rate-limiting (429 errors) for one IP address (`124.43.9.41`) hitting `/signup` repeatedly, but this affects only that specific client, not all users.
+**1. `supabase/functions/cast-vote/index.ts`** — line 10
+- Change `NORMAL_LIMIT = 1` → `NORMAL_LIMIT = 2`
+- This is the server-side enforcement. The edge function will be redeployed automatically.
 
-### Fix (single change)
+**2. `src/components/VotingGallery.tsx`** — line 29
+- Change `NORMAL_LIMIT = 1` → `NORMAL_LIMIT = 2`
+- This controls the UI (button disable state, "Limit" text).
 
-**File: `src/components/VotingGallery.tsx`**
-- Delete the duplicate `MEDALS` block on lines 40-44. Keep only the first declaration (lines 34-38).
+### What stays the same
+- Judge scoring (Gold/Silver/Bronze) — untouched
+- `JUDGE_LIMIT = 5` — remains but is only used if a judge casts regular votes (which they don't in current flow)
+- Database schema — no changes
+- Duplicate vote check — users still cannot vote for the same contestant twice
+- Honorary contestant logic — unchanged
 
-No other files need changes. This will restore the app immediately.
+### Effect on existing users
+- Users who already cast 1 vote in a category can now cast 1 more
+- Users who haven't voted yet get 2 votes per category
+- No data is lost or modified
 
-### What this does NOT touch
-- No changes to login, auth, profiles, votes, contestants, or edge functions.
-- No database changes.
+### Risk level
+**Very low.** Two constant changes, no structural modifications. Edge function redeploy takes ~10 seconds.
 
