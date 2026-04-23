@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -233,14 +233,24 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
 }) => {
   const photo = contestant.photo_urls?.[0];
   const thumbPhoto = photo ? getThumbUrl(photo) : null;
+  const [imgState, setImgState] = useState<"loading" | "loaded" | "error">(thumbPhoto ? "loading" : "error");
 
   return (
     <div className={`group relative w-full min-h-[320px] aspect-[3/4] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
       (isVoted || judgeScore) ? "ring-2 ring-gold shadow-[0_0_25px_hsl(43_76%_52%/0.3)]" : "hover:shadow-[0_0_20px_hsl(43_76%_52%/0.2)]"
     }`}>
       <button onClick={onViewDetails} className="absolute inset-0 z-10 h-full w-full cursor-pointer focus:outline-none">
-        {thumbPhoto ? (
-          <img src={thumbPhoto} alt={contestant.full_name} className="h-full w-full object-cover" loading="lazy" />
+        {thumbPhoto && imgState !== "error" ? (
+          <>
+            {imgState === "loading" && (
+              <div className="absolute inset-0 bg-muted animate-pulse" />
+            )}
+            <img src={thumbPhoto} alt={contestant.full_name}
+              className={`h-full w-full object-cover object-top transition-opacity duration-300 ${imgState === "loaded" ? "opacity-100" : "opacity-0"}`}
+              loading="lazy"
+              onLoad={() => setImgState("loaded")}
+              onError={() => setImgState("error")} />
+          </>
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted text-4xl text-muted-foreground">👤</div>
         )}
