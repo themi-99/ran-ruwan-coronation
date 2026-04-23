@@ -26,11 +26,12 @@ interface Props {
   isVoted: boolean;
   hasReachedLimit: boolean;
   isSelf: boolean;
+  isHonorary?: boolean;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
   onClose: () => void;
 }
 
-const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onClose }: Props) => {
+const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isHonorary = false, onVote, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const photos = contestant.photo_urls || [];
