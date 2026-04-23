@@ -6,7 +6,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const NORMAL_LIMIT = 1;
+const NORMAL_LIMIT = 2;
 const JUDGE_LIMIT = 5;
 
 Deno.serve(async (req) => {
