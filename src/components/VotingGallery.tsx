@@ -245,11 +245,8 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
             {imgState === "loading" && (
               <div className="absolute inset-0 bg-muted animate-pulse" />
             )}
-            {/* Blurred background fill so narrow images don't look thin */}
-            <img src={thumbPhoto} alt="" aria-hidden="true"
-              className={`absolute inset-0 h-full w-full object-cover blur-2xl scale-110 opacity-60 transition-opacity duration-300 ${imgState === "loaded" ? "opacity-60" : "opacity-0"}`} />
             <img src={thumbPhoto} alt={contestant.full_name}
-              className={`relative h-full w-full object-contain transition-opacity duration-300 ${imgState === "loaded" ? "opacity-100" : "opacity-0"}`}
+              className={`h-full w-full object-cover object-top transition-opacity duration-300 ${imgState === "loaded" ? "opacity-100" : "opacity-0"}`}
               loading="lazy"
               onLoad={() => setImgState("loaded")}
               onError={() => setImgState("error")} />
