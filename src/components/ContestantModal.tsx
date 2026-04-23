@@ -47,6 +47,8 @@ interface Props {
   onClose: () => void;
 }
 
+const HONORARY_NICS = ["991432752V", "842530300V"];
+
 const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isJudge, judgeScore, onVote, onMedalClick, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
