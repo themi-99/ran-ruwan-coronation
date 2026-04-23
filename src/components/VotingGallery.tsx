@@ -184,6 +184,20 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
   );
 };
 
+/* ── Supabase Storage thumbnail helper ── */
+const getThumbUrl = (url: string): string => {
+  try {
+    const u = new URL(url);
+    if (u.pathname.includes("/storage/v1/object/public/")) {
+      const bucketPath = u.pathname.split("/storage/v1/object/public/")[1];
+      if (bucketPath) {
+        return `${u.origin}/storage/v1/render/image/public/${bucketPath}?width=600&quality=80`;
+      }
+    }
+  } catch { /* fall through */ }
+  return url;
+};
+
 /* ── Premium "Character Poster" Card ── */
 const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isHonorary, onVote, onViewDetails }: {
   contestant: { id: string; nic: string; full_name: string; photo_urls: string[] | null };
@@ -193,6 +207,7 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
   onViewDetails: () => void;
 }) => {
   const photo = contestant.photo_urls?.[0];
+  const thumbPhoto = photo ? getThumbUrl(photo) : null;
 
   return (
     <div
@@ -201,8 +216,8 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
       }`}
     >
       <button onClick={onViewDetails} className="absolute inset-0 z-10 h-full w-full cursor-pointer focus:outline-none">
-        {photo ? (
-          <img src={photo} alt={contestant.full_name} className="h-full w-full object-cover" loading="lazy" />
+        {thumbPhoto ? (
+          <img src={thumbPhoto} alt={contestant.full_name} className="h-full w-full object-cover" loading="lazy" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-muted text-4xl text-muted-foreground">👤</div>
         )}
