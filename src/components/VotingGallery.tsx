@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ContestantModal from "@/components/ContestantModal";
-import JudgeBallotCounter from "@/components/JudgeBallotCounter";
+
 
 interface Contestant {
   id: string;
@@ -134,7 +134,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
     };
   };
 
-  const judgeScoresInCategory = judgeScores.filter((s) => s.category === selectedCategory).length;
+  
 
   if (loading) return <div className="text-center py-10 text-muted-foreground">Loading contestants...</div>;
 
@@ -173,16 +173,8 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
         </button>
       </div>
 
-      {isJudge && (
-        <div className="relative z-10">
-          <JudgeBallotCounter
-            maleVotesCast={judgeScores.filter((s) => s.category === "kumara").length}
-            femaleVotesCast={judgeScores.filter((s) => s.category === "kumariya").length}
-            limit={JUDGE_LIMIT}
-            activeCategory={selectedCategory}
-          />
-        </div>
-      )}
+
+
 
       <section className="relative z-10">
         <div key={selectedCategory} className="animate-fade-in">
