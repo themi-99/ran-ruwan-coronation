@@ -37,6 +37,12 @@ const MEDALS = [
   { key: "bronze", emoji: "🥉", label: "Bronze", points: 1 },
 ] as const;
 
+const MEDALS = [
+  { key: "gold", emoji: "🥇", label: "Gold", points: 5 },
+  { key: "silver", emoji: "🥈", label: "Silver", points: 3 },
+  { key: "bronze", emoji: "🥉", label: "Bronze", points: 1 },
+] as const;
+
 const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
   const [contestants, setContestants] = useState<Contestant[]>([]);
   const [maleVotes, setMaleVotes] = useState<string[]>([]);
