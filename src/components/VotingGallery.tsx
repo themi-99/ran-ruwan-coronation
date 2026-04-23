@@ -19,6 +19,7 @@ interface Props {
   isJudge?: boolean;
 }
 
+const HONORARY_NICS = ["991432752V", "842530300V"];
 const NORMAL_LIMIT = 1;
 const JUDGE_LIMIT = 5;
 
@@ -162,6 +163,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
                     contestant={c}
                     category={selectedCategory}
                     {...vs}
+                    isHonorary={HONORARY_NICS.includes(c.nic)}
                     onVote={vote}
                     onViewDetails={() => { setSelectedContestant(c); }}
                   />
@@ -175,6 +177,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
       {selectedContestant && (
         <ContestantModal contestant={selectedContestant} category={selectedCategory}
           {...getVoteState(selectedContestant.nic, selectedCategory)}
+          isHonorary={HONORARY_NICS.includes(selectedContestant.nic)}
           onVote={vote} onClose={() => setSelectedContestant(null)} />
       )}
     </div>
@@ -182,10 +185,10 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
 };
 
 /* ── Premium "Character Poster" Card ── */
-const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, onVote, onViewDetails }: {
+const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isHonorary, onVote, onViewDetails }: {
   contestant: { id: string; nic: string; full_name: string; photo_urls: string[] | null };
   category: "kumara" | "kumariya";
-  isVoted: boolean; hasReachedLimit: boolean; isSelf: boolean;
+  isVoted: boolean; hasReachedLimit: boolean; isSelf: boolean; isHonorary: boolean;
   onVote: (nic: string, cat: "kumara" | "kumariya") => void;
   onViewDetails: () => void;
 }) => {
@@ -216,7 +219,11 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, on
             className="min-w-[80px] flex-1 text-xs h-8 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
             Details
           </Button>
-          {isSelf ? (
+          {isHonorary ? (
+            <span className="min-w-[80px] flex-1 text-[11px] font-heading font-semibold tracking-wide flex min-h-8 items-center justify-center rounded-full px-3 bg-gradient-to-r from-amber-500/20 via-yellow-400/20 to-amber-500/20 border border-gold/30 text-gold shadow-[0_0_12px_hsl(43_76%_52%_/_0.15)]">
+              Honorary Participant ✨
+            </span>
+          ) : isSelf ? (
             <span className="min-w-[80px] flex-1 text-[10px] text-muted-foreground italic flex min-h-8 items-center justify-center rounded-md px-2">You</span>
           ) : isVoted ? (
             <span className="min-w-[80px] flex-1 text-xs text-gold font-medium flex min-h-8 items-center justify-center rounded-md px-2">✅ Voted</span>
