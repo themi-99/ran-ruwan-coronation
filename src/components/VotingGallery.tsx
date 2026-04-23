@@ -236,7 +236,7 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">(thumbPhoto ? "loading" : "error");
 
   return (
-    <div className={`group relative w-full min-h-[320px] aspect-[3/4] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
+    <div className={`group relative w-full min-h-[360px] aspect-[2/3] overflow-hidden rounded-xl border border-foreground/10 backdrop-blur-sm transition-all duration-300 ${
       (isVoted || judgeScore) ? "ring-2 ring-gold shadow-[0_0_25px_hsl(43_76%_52%/0.3)]" : "hover:shadow-[0_0_20px_hsl(43_76%_52%/0.2)]"
     }`}>
       <button onClick={onViewDetails} className="absolute inset-0 z-10 h-full w-full cursor-pointer focus:outline-none">
