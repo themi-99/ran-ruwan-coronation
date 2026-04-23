@@ -47,6 +47,8 @@ interface Props {
   onClose: () => void;
 }
 
+const HONORARY_NICS = ["991432752V", "842530300V"];
+
 const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSelf, isJudge, judgeScore, onVote, onMedalClick, onClose }: Props) => {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -141,7 +143,13 @@ const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSel
                 </p>
               )}
 
-              {isJudge && onMedalClick ? (
+              {HONORARY_NICS.includes(contestant.nic) ? (
+                <div className="w-full flex justify-center">
+                  <span className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-amber-300 bg-amber-500/10 border border-amber-400/30">
+                    Honorary Participant ✨
+                  </span>
+                </div>
+              ) : isJudge && onMedalClick ? (
                 <div className="w-full space-y-3">
                   <p className="text-muted-foreground text-sm font-heading">Award a medal:</p>
                   <div className="flex gap-3 justify-center">
