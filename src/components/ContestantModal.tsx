@@ -125,7 +125,11 @@ const ContestantModal = ({ contestant, category, isVoted, hasReachedLimit, isSel
                 </p>
               )}
 
-              {isSelf ? (
+              {isHonorary ? (
+                <div className="w-full py-3 rounded-xl text-center font-heading font-semibold text-sm tracking-wide bg-gradient-to-r from-amber-500/20 via-yellow-400/20 to-amber-500/20 border border-gold/30 text-gold shadow-[0_0_12px_hsl(43_76%_52%_/_0.15)]">
+                  Honorary Participant ✨
+                </div>
+              ) : isSelf ? (
                 <p className="text-muted-foreground italic text-sm">You can't vote for yourself</p>
               ) : isVoted ? (
                 <div className="text-gold font-heading font-semibold text-lg">
