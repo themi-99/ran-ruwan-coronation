@@ -170,7 +170,6 @@ const HomePage = () => {
           </div>
         )}
       </main>
-      <p className="text-xs text-muted-foreground text-center py-4 relative z-10">v1.1</p>
     </div>
   );
 };
