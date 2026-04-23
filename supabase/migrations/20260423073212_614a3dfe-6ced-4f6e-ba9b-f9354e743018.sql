@@ -1,1 +1,0 @@
-ALTER TABLE public.judge_scores ADD CONSTRAINT judge_scores_judge_candidate_category_unique UNIQUE (judge_nic, candidate_nic, category);

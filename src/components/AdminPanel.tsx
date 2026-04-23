@@ -14,7 +14,7 @@ interface Props {
 interface LeaderEntry {
   nic: string;
   full_name: string;
-  branch: string | null;
+  branch: string;
   normalVotes: number;
   judgePoints: number;
   totalScore: number;
@@ -42,37 +42,38 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   }, []);
 
   const fetchLeaderboard = async () => {
-    const [{ data: votes }, { data: judgeScores }, { data: profiles }] = await Promise.all([
+    const [{ data: votes }, { data: profiles }, { data: judgeScores }] = await Promise.all([
       supabase.from("votes").select("*"),
-      supabase.from("judge_scores").select("*"),
       supabase.from("profiles").select("nic, full_name, branch"),
+      supabase.from("judge_scores").select("*"),
     ]);
     if (!votes || !profiles) return;
 
-    const build = (category: string): LeaderEntry[] => {
-      // Normal votes
-      const voteCounts: Record<string, number> = {};
-      votes.filter((v) => v.category === category).forEach((v) => {
-        if (v.candidate_nic) voteCounts[v.candidate_nic] = (voteCounts[v.candidate_nic] || 0) + 1;
-      });
+    const buildBoard = (category: string): LeaderEntry[] => {
+      // Get all candidate NICs from both votes and judge_scores for this category
+      const allNics = new Set<string>();
+      votes.filter((v) => v.category === category).forEach((v) => { if (v.candidate_nic) allNics.add(v.candidate_nic); });
+      (judgeScores || []).filter((s) => s.category === category).forEach((s) => { if (s.candidate_nic) allNics.add(s.candidate_nic); });
 
-      // Judge points
-      const judgePts: Record<string, number> = {};
-      (judgeScores || []).filter((s) => s.category === category).forEach((s) => {
-        judgePts[s.candidate_nic] = (judgePts[s.candidate_nic] || 0) + s.points;
-      });
-
-      const allNics = new Set([...Object.keys(voteCounts), ...Object.keys(judgePts)]);
       return Array.from(allNics).map((nic) => {
         const profile = profiles.find((p) => p.nic === nic);
-        const nv = voteCounts[nic] || 0;
-        const jp = judgePts[nic] || 0;
-        return { nic, full_name: profile?.full_name || "Unknown", branch: profile?.branch || null, normalVotes: nv, judgePoints: jp, totalScore: nv + jp };
+        const normalVotes = votes.filter((v) => v.category === category && v.candidate_nic === nic).length;
+        const judgePoints = (judgeScores || [])
+          .filter((s) => s.category === category && s.candidate_nic === nic)
+          .reduce((sum, s) => sum + (s.points as number), 0);
+        return {
+          nic,
+          full_name: profile?.full_name || "Unknown",
+          branch: profile?.branch || "—",
+          normalVotes,
+          judgePoints,
+          totalScore: normalVotes + judgePoints,
+        };
       }).sort((a, b) => b.totalScore - a.totalScore);
     };
 
-    setKumaraBoard(build("kumara"));
-    setKumariyaBoard(build("kumariya"));
+    setKumaraBoard(buildBoard("kumara"));
+    setKumariyaBoard(buildBoard("kumariya"));
   };
 
   const fetchParticipantCount = async () => {
@@ -119,10 +120,18 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
         <h3 className="font-heading font-bold text-lg text-foreground tracking-wide">📊 Social Proof Counter</h3>
         <p className="text-xs text-muted-foreground font-body">This number is shown on the homepage as "Over X Contestants Have Already Joined"</p>
         <div className="flex items-center gap-3">
-          <Input type="number" min={0} value={participantCount} onChange={(e) => setParticipantCount(Number(e.target.value))}
-            className="w-32 bg-input border-border text-foreground text-lg font-heading font-bold" />
-          <Button onClick={saveParticipantCount} disabled={savingCount}
-            className="gold-gradient text-primary-foreground font-semibold hover:opacity-90">
+          <Input
+            type="number"
+            min={0}
+            value={participantCount}
+            onChange={(e) => setParticipantCount(Number(e.target.value))}
+            className="w-32 bg-input border-border text-foreground text-lg font-heading font-bold"
+          />
+          <Button
+            onClick={saveParticipantCount}
+            disabled={savingCount}
+            className="gold-gradient text-primary-foreground font-semibold hover:opacity-90"
+          >
             {savingCount ? "Saving..." : "Update Count"}
           </Button>
         </div>
@@ -145,10 +154,10 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
         <p className="text-sm text-muted-foreground font-body">Current: <span className="text-gold font-semibold">{currentStage}</span></p>
       </div>
 
-      {/* Leaderboards */}
+      {/* Combined Leaderboards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Leaderboard title="👑 Swarna Kumara Leaderboard" entries={kumaraBoard} />
-        <Leaderboard title="👑 Swarna Kumariya Leaderboard" entries={kumariyaBoard} />
+        <CombinedLeaderboard title="👑 Swarna Kumara" entries={kumaraBoard} />
+        <CombinedLeaderboard title="👑 Swarna Kumariya" entries={kumariyaBoard} />
       </div>
 
       {/* Contestants Directory */}
@@ -157,44 +166,38 @@ const AdminPanel = ({ currentStage, onStageChange, adminNic }: Props) => {
   );
 };
 
-const Leaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[] }) => (
+const CombinedLeaderboard = ({ title, entries }: { title: string; entries: LeaderEntry[] }) => (
   <div className="bg-card rounded-lg p-5 gold-border space-y-3">
     <h3 className="font-heading font-bold text-lg text-gold tracking-wide">{title}</h3>
     {entries.length === 0 ? (
-      <p className="text-muted-foreground text-sm">No votes yet</p>
+      <p className="text-muted-foreground text-sm">No scores yet</p>
     ) : (
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="py-2 pr-2 text-muted-foreground font-heading text-xs">#</th>
-              <th className="py-2 pr-2 text-muted-foreground font-heading text-xs">Name</th>
-              <th className="py-2 pr-2 text-muted-foreground font-heading text-xs">Branch</th>
-              <th className="py-2 pr-2 text-muted-foreground font-heading text-xs text-right">Votes</th>
-              <th className="py-2 pr-2 text-muted-foreground font-heading text-xs text-right">Judge</th>
-              <th className="py-2 text-muted-foreground font-heading text-xs text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e, i) => (
-              <tr key={e.nic} className={`border-b border-border last:border-0 ${i === 0 ? "bg-gold/5" : ""}`}>
-                <td className="py-2 pr-2">
-                  <span className={i === 0 ? "text-gold font-bold" : "text-muted-foreground"}>
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
-                  </span>
-                </td>
-                <td className="py-2 pr-2 text-foreground font-body truncate max-w-[120px]">
-                  {e.full_name}
-                  {i === 0 && <span className="ml-1 text-[10px] text-gold font-heading">WINNER</span>}
-                </td>
-                <td className="py-2 pr-2 text-muted-foreground font-body text-xs truncate max-w-[80px]">{e.branch || "—"}</td>
-                <td className="py-2 pr-2 text-foreground font-body text-right">{e.normalVotes}</td>
-                <td className="py-2 pr-2 text-foreground font-body text-right">{e.judgePoints}</td>
-                <td className="py-2 text-gold font-heading font-bold text-right">{e.totalScore}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="space-y-0">
+        {/* Header row */}
+        <div className="flex items-center gap-2 py-2 border-b border-border text-[10px] uppercase tracking-wider text-muted-foreground font-heading">
+          <span className="w-6">#</span>
+          <span className="flex-1">Name</span>
+          <span className="w-14 text-center">Branch</span>
+          <span className="w-12 text-center">Votes</span>
+          <span className="w-12 text-center">Judge</span>
+          <span className="w-14 text-center font-bold">Total</span>
+        </div>
+        {entries.map((e, i) => (
+          <div key={e.nic} className={`flex items-center gap-2 py-2 border-b border-border/50 last:border-0 ${i === 0 ? "bg-gold/5" : ""}`}>
+            <span className={`w-6 text-sm ${i === 0 ? "text-gold font-bold" : "text-muted-foreground"}`}>
+              {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
+            </span>
+            <span className={`flex-1 text-sm font-body truncate ${i === 0 ? "text-gold font-semibold" : "text-foreground"}`}>
+              {e.full_name}
+            </span>
+            <span className="w-14 text-center text-xs text-muted-foreground truncate">{e.branch}</span>
+            <span className="w-12 text-center text-sm text-foreground">{e.normalVotes}</span>
+            <span className="w-12 text-center text-sm text-foreground">{e.judgePoints}</span>
+            <span className={`w-14 text-center text-sm font-bold ${i === 0 ? "text-gold" : "text-foreground"}`}>
+              {e.totalScore}
+            </span>
+          </div>
+        ))}
       </div>
     )}
   </div>
