@@ -27,7 +27,7 @@ interface JudgeScore {
   points: number;
 }
 
-const NORMAL_LIMIT = 1;
+const NORMAL_LIMIT = 2;
 const JUDGE_LIMIT = 5;
 const HONORARY_NICS = ["991432752V", "842530300V"];
 
