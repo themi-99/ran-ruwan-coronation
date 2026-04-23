@@ -29,6 +29,13 @@ interface JudgeScore {
 
 const NORMAL_LIMIT = 1;
 const JUDGE_LIMIT = 5;
+const HONORARY_NICS = ["991432752V", "842530300V"];
+
+const MEDALS = [
+  { key: "gold", emoji: "🥇", label: "Gold", points: 5 },
+  { key: "silver", emoji: "🥈", label: "Silver", points: 3 },
+  { key: "bronze", emoji: "🥉", label: "Bronze", points: 1 },
+] as const;
 
 const MEDALS = [
   { key: "gold", emoji: "🥇", label: "Gold", points: 5 },
@@ -284,7 +291,11 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
             className="min-w-[80px] flex-1 text-xs h-8 border-foreground/20 text-foreground/80 hover:bg-foreground/10 backdrop-blur-sm">
             Details
           </Button>
-          {isJudge ? (
+          {HONORARY_NICS.includes(contestant.nic) ? (
+            <span className="min-w-[80px] flex-1 text-[10px] font-semibold text-amber-300 italic flex min-h-8 items-center justify-center rounded-md px-2 bg-amber-500/10 border border-amber-400/30">
+              Honorary Participant ✨
+            </span>
+          ) : isJudge ? (
             <div className="flex gap-1 flex-1 min-w-[80px]">
               {MEDALS.map((m) => (
                 <button
