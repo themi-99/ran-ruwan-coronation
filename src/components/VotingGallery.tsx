@@ -19,6 +19,7 @@ interface Props {
   isJudge?: boolean;
 }
 
+const HONORARY_NICS = ["991432752V", "842530300V"];
 const NORMAL_LIMIT = 1;
 const JUDGE_LIMIT = 5;
 
