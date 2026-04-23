@@ -246,7 +246,7 @@ const PosterCard = ({ contestant, category, isVoted, hasReachedLimit, isSelf, is
               <div className="absolute inset-0 bg-muted animate-pulse" />
             )}
             <img src={thumbPhoto} alt={contestant.full_name}
-              className={`h-full w-full object-cover object-top transition-opacity duration-300 ${imgState === "loaded" ? "opacity-100" : "opacity-0"}`}
+              className={`h-full w-full object-cover transition-opacity duration-300 ${imgState === "loaded" ? "opacity-100" : "opacity-0"}`}
               loading="lazy"
               onLoad={() => setImgState("loaded")}
               onError={() => setImgState("error")} />
