@@ -163,6 +163,7 @@ const VotingGallery = ({ voterNic, isJudge = false }: Props) => {
                     contestant={c}
                     category={selectedCategory}
                     {...vs}
+                    isHonorary={HONORARY_NICS.includes(c.nic)}
                     onVote={vote}
                     onViewDetails={() => { setSelectedContestant(c); }}
                   />
